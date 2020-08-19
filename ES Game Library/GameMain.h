@@ -5,10 +5,9 @@
 
 class GameMain : public CGameScene {
 public:
-	GameMain()
+	GameMain() : DefaultFont(GraphicsDevice.CreateDefaultFont())
 	{
-//		ContentRootDirectory(_T("Content"));
-
+		//		ContentRootDirectory(_T("Content"));
 	}
 
 	virtual ~GameMain()
@@ -57,25 +56,46 @@ private:
 
 private:
 	// 変数宣言
-	SPRITE player;
-	SPRITE player_swing;
-	SPRITE player_Empty_swing;
-	SPRITE map;
-	SPRITE perfect;
-	SPRITE good;
-	SPRITE miss;
-	SPRITE life;
-	float player_x, player_y;
-	float pc_x, pc_y;
-	int hit_test;
-	float range;
-	int swing_flg;
-	float life_y;
-	float clip_x;
 
-	Rect  player_collision;
-	Rect  perfect_collision;
-	Rect  pc_collision;
+	enum {
+		物の数 = 100,
+	};
+
+	MEDIA ムービー;
+	SPRITE 背景;
+	SPRITE プレイヤー;
+	SPRITE テレビ;
+	SPRITE カメラ;
+	SPRITE 電子レンジ;
+	SPRITE 当たり判定;
+
+	_int64 moviepos;
+
+	int タイミング[物の数];
+	int 秒;
+	int 一秒;
+	int 開始_state;
+	float 電子レンジ速度;
+	float テレビ速度;
+	float カメラ速度;
+	float テレビ_x[物の数], テレビ_y[物の数];
+	float プレイヤー_x, プレイヤー_y;
+	float 当たり判定_x, 当たり判定_y;
+	int ゴール[物の数];
+	char comma;
+	int ムービー時間;
+	int 物_state[物の数];
+	int 数;
+	int デバック;
+	int 放物線;
+	int 放物線_state[物の数];
+	float スピード_y[物の数];
+
+	Rect 当たり判定_collision;
+	Rect 物_collision[物の数];
+
+	FONT フォント;
+
 	// 関数宣言
 
 };
