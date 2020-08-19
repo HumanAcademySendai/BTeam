@@ -1,18 +1,19 @@
 #pragma once
 
-#include "ESGLib.h"
-#include "GameScene/GameScene.hpp"
+#include "GameScene.hpp"
+#include "../ESGLib.h"
 
-class GameMain : public CGameScene {
+class clearScene : public CGameScene {
 public:
-	GameMain()
+	clearScene()
 	{
 //		ContentRootDirectory(_T("Content"));
-
 	}
 
-	virtual ~GameMain()
+	virtual ~clearScene()
 	{
+		Finalize();
+
 #ifdef _INC_SQUIRREL
 		Squirrel.ReleaseAllScripts();
 #endif
@@ -41,11 +42,8 @@ public:
 		GraphicsDevice.ReleaseAllModels();
 		GraphicsDevice.ReleaseAllVertexBuffers();
 		GraphicsDevice.ReleaseAllEffects();
-
-		Finalize();
 	}
 
-public:
 	virtual bool Initialize();
 
 	virtual int  Update();
@@ -53,48 +51,13 @@ public:
 
 private:
 	void Finalize();
-	FONT DefaultFont;
-
-public:
-	static int score;
 
 private:
 	// 変数宣言
-	SPRITE player;
-	SPRITE player_swing;
-	SPRITE player_Empty_swing;
-	SPRITE map;
-	SPRITE perfect;
-	SPRITE good;
-	SPRITE miss;
-	SPRITE life;
-	SPRITE good_point;
-	SPRITE perfect_point;
-	SPRITE Tv;
-	SPRITE circle;
-	SPRITE hit_point;
-	SOUND good_se;
-	SOUND perfect_se;
-	SOUND miss_se;
-	float player_x, player_y;
-	float Tv_x, Tv_y;
-	int hit_test;
-	float range;
-	int swing_flg;
-	float life_y;
-	float clip_x;
-	int count;
-	float good_x,good_y;
-	float perfect_x, perfect_y;
-	int hitcount = 0;
-	float Tv_alpha;
-	float big;
-	float circle_alpha;
-	Rect  player_collision;
-	Rect  perfect_collision;
-	Rect  Tv_collision;
-	Rect  good_collision;
-	Rect  good2_collision;
-	// 関数宣言
+	SPRITE clear_;
+	FONT txt;
+	FONT bigtxt;
+
+	// 関数プロトタイプ
 
 };

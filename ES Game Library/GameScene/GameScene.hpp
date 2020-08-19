@@ -82,3 +82,4 @@ private:
 //------------------------------------------------------------------------------
 #include "../GameMain.h"
 #include "title.hpp"
+#include "clear.hpp"
