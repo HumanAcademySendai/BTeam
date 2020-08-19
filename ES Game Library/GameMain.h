@@ -54,8 +54,46 @@ private:
 	void Finalize();
 	FONT DefaultFont;
 
+public:
+	static int score;
+
 private:
 	// ïœêîêÈåæ
+	SPRITE player;
+	SPRITE player_swing;
+	SPRITE player_Empty_swing;
+	SPRITE map;
+	SPRITE perfect;
+	SPRITE good;
+	SPRITE miss;
+	SPRITE life;
+	SPRITE good_point;
+	SPRITE perfect_point;
+	SPRITE Tv;
+	SPRITE circle;
+	SPRITE hit_point;
+	SOUND good_se;
+	SOUND perfect_se;
+	SOUND miss_se;
+	float player_x, player_y;
+	float Tv_x, Tv_y;
+	int hit_test;
+	float range;
+	int swing_flg;
+	float life_y;
+	float clip_x;
+	int count;
+	float good_x,good_y;
+	float perfect_x, perfect_y;
+	int hitcount = 0;
+	float Tv_alpha;
+	float big;
+	float circle_alpha;
+	Rect  player_collision;
+	Rect  perfect_collision;
+	Rect  Tv_collision;
+	Rect  good_collision;
+	Rect  good2_collision;
 
 	enum {
 		ï®ÇÃêî = 100,
