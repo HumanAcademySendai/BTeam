@@ -166,6 +166,37 @@ int GameMain::Update()
 						テレビ_y[i] += 放物線;
 					}
 				}
+				else if (物_state[i] == 2) {
+					テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * カメラ速度;
+
+					if (テレビ_x[i] < 1280) {
+						テレビ_y[i] = テレビ_y[i] - (スピード_y[i]--);
+					}
+				}
+				else if (物_state[i] == 3) {
+					テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * 電子レンジ速度;
+				}
+
+				if (開始_state == 1) {
+
+					if (テレビ_x[i] < -400) {
+						物_state[i] = 0;
+						放物線_state[i] = 0;
+						スピード_y[i] = 0;
+					}
+				}
+				else if (開始_state == 2) {
+
+					if (テレビ_x[i] < -500) {
+						物_state[i] = 0;
+						放物線_state[i] = 0;
+						開始_state = 3;
+					}
+				}
+			}
+		}
+	}
+
 	if (key.IsKeyDown(Keys_Space)&& swing_flg == false)
 	{
 		swing_flg = true;
@@ -216,35 +247,9 @@ int GameMain::Update()
 		if (clip_x >= 2100)
 		{
 			clip_x = 2100;
-			else if (物_state[i] == 2) {
-				テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * カメラ速度;
-
-				if (テレビ_x[i] < 1280) {
-					テレビ_y[i] = テレビ_y[i] - (スピード_y[i]--);
-				}
-			}
-			else if (物_state[i] == 3) {
-				テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * 電子レンジ速度;
-			}
-
-			if (開始_state == 1) {
-
-				if (テレビ_x[i] < -400) {
-					物_state[i] = 0;
-					放物線_state[i] = 0;
-					スピード_y[i] = 0;
-				}
-			}
-			else if (開始_state == 2) {
-
-				if (テレビ_x[i] < -500) {
-					物_state[i] = 0;
-					放物線_state[i]= 0;
-					開始_state = 3;
-				}
-			}
 		}
 	}
+		
 	count--;
 	big -= 0.011;
 	if (big <= 0)
@@ -268,6 +273,7 @@ int GameMain::Update()
 	if (key_buf.IsPressed(Keys_A))
 	{
 		return GAME_SCENE(new clearScene);
+	}
 
 	if (一秒 == 85) {
 		開始_state = 2;
