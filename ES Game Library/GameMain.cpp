@@ -166,32 +166,32 @@ int GameMain::Update()
 						テレビ_y[i] += 放物線;
 					}
 				}
-				else if (物_state[i] == 2) {
-					テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * カメラ速度;
+			}
+			else if (物_state[i] == 2) {
+				テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * カメラ速度;
 
-					if (テレビ_x[i] < 1280) {
-						テレビ_y[i] = テレビ_y[i] - (スピード_y[i]--);
-					}
+				if (テレビ_x[i] < 1280) {
+					テレビ_y[i] = テレビ_y[i] - (スピード_y[i]--);
 				}
-				else if (物_state[i] == 3) {
-					テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * 電子レンジ速度;
+			}
+			else if (物_state[i] == 3) {
+				テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * 電子レンジ速度;
+			}
+
+			if (開始_state == 1) {
+
+				if (テレビ_x[i] < -400) {
+					物_state[i] = 0;
+					放物線_state[i] = 0;
+					スピード_y[i] = 0;
 				}
+			}
+			else if (開始_state == 2) {
 
-				if (開始_state == 1) {
-
-					if (テレビ_x[i] < -400) {
-						物_state[i] = 0;
-						放物線_state[i] = 0;
-						スピード_y[i] = 0;
-					}
-				}
-				else if (開始_state == 2) {
-
-					if (テレビ_x[i] < -500) {
-						物_state[i] = 0;
-						放物線_state[i] = 0;
-						開始_state = 3;
-					}
+				if (テレビ_x[i] < -500) {
+					物_state[i] = 0;
+					放物線_state[i] = 0;
+					開始_state = 3;
 				}
 			}
 		}
@@ -350,12 +350,12 @@ void GameMain::Draw()
 	Paint paint;
 
 
-	//paint.SetPaintColor(Color_Red);
-	//canvas.DrawRect(good_collision, paint);
-	//paint.SetPaintColor(Color_Green);
-	//canvas.DrawRect(perfect_collision, paint);
-	//paint.SetPaintColor(Color_Blue);
-	//canvas.DrawRect(Tv_collision, paint);
+	paint.SetPaintColor(Color_Red);
+	canvas.DrawRect(good_collision, paint);
+	paint.SetPaintColor(Color_Green);
+	canvas.DrawRect(perfect_collision, paint);
+	paint.SetPaintColor(Color_Blue);
+	canvas.DrawRect(Tv_collision, paint);
 	paint.SetPaintColor(Color_Blue);
 	canvas.DrawRect(当たり判定_collision, paint);
 
