@@ -116,6 +116,8 @@ private:
 	float テレビ速度;
 	float カメラ速度;
 	float テレビ_x[物の数], テレビ_y[物の数];
+	float カメラ_x[物の数], カメラ_y[物の数];
+	float 電子レンジ_x[物の数], 電子レンジ_y[物の数];
 	float プレイヤー_x, プレイヤー_y;
 	float 当たり判定_x, 当たり判定_y;
 	int ゴール[物の数];
@@ -124,18 +126,25 @@ private:
 	int 物_state[物の数];
 	int 数;
 	int デバック;
-	int 放物線;
-	int 放物線_state[物の数];
+	//int テレビ動き;
+	//int テレビ動き_state[物の数];
 	float スピード_y[物の数];
+	float シータ[物の数];
 
 	Rect 当たり判定_collision;
-	Rect 物_collision[物の数];
+	Rect テレビ_collision[物の数];
+	Rect カメラ_collision[物の数];
+	Rect 電子レンジ_collision[物の数];
 
 	FONT フォント;
 
 	KeyboardState keyboard;
 	KeyboardBuffer key_buf;
 	// 関数宣言
+
+	void 髙橋Initialize();
+	void 髙橋Main();
+	void 髙橋Draw();
 	void iwai_Initialize();
 	void iwai_Update();
 	void iwai_Draw();

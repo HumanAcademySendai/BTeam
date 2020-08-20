@@ -15,6 +15,85 @@ bool GameMain::Initialize()
 {
 	DefaultFont = GraphicsDevice.CreateDefaultFont();
 
+	髙橋Initialize();
+
+	return true;
+}
+
+/// <summary>
+/// Finalize will be called once per game and is the place to release
+/// all resource.
+/// </summary>
+void GameMain::Finalize()
+{
+	// TODO: Add your finalization logic here
+
+}
+
+/// <summary>
+/// Allows the game to run logic such as updating the world,
+/// checking for collisions, gathering input, and playing audio.
+/// </summary>
+/// <returns>
+/// Scene continued value.
+/// </returns>
+int GameMain::Update()
+{
+	// TODO: Add your update logic here
+
+	髙橋Main();
+
+	return 0;
+}
+
+/// <summary>
+/// This is called when the game should draw itself.
+/// </summary>
+void GameMain::Draw()
+{
+	// TODO: Add your drawing code here
+	GraphicsDevice.Clear(Color_CornflowerBlue);
+
+	GraphicsDevice.BeginScene();
+
+
+	SpriteBatch.Begin();
+
+	髙橋Draw();
+
+	SpriteBatch.End();
+
+	GraphicsDevice.EndScene();
+
+	Canvas canvas = GraphicsDevice.LockCanvas();
+
+	Paint paint;
+
+	paint.SetPaintColor(Color_Blue);
+	canvas.DrawRect(当たり判定_collision, paint);
+
+	for (int i = 0; i < 物の数; i++) {
+
+		if (物_state[i] == 1) {
+			paint.SetPaintColor(Color_Red);
+			canvas.DrawRect(テレビ_collision[i], paint);
+		}
+		else if (物_state[i] == 2) {
+			paint.SetPaintColor(Color_Red);
+			canvas.DrawRect(カメラ_collision[i], paint);
+		}
+		else if (物_state[i] == 3) {
+			paint.SetPaintColor(Color_Red);
+			canvas.DrawRect(電子レンジ_collision[i], paint);
+		}
+	}
+
+	GraphicsDevice.UnlockCanvas();
+}
+
+void GameMain::髙橋Initialize() {
+
+	背景 = GraphicsDevice.CreateSpriteFromFile(_T("背景.png"));
 	iwai_Initialize();
 
 	背景 = GraphicsDevice.CreateSpriteFromFile(_T("背景.png")); 
@@ -30,7 +109,7 @@ bool GameMain::Initialize()
 	ムービー = MediaManager.CreateMediaFromFile(_T("シャイニングスターショート.mp3"));
 
 	カメラ速度 = 20;
-	電子レンジ速度 = 15;
+	電子レンジ速度 = 5;
 	テレビ速度 = 10;
 	秒 = 0;
 	一秒 = 0;
@@ -40,18 +119,28 @@ bool GameMain::Initialize()
 
 	for (int i = 0; i < 物の数; i++) {
 		ゴール[i] = 100 + (150 * i);
-		物_state[i] = MathHelper_Random(1, 3);
 		テレビ_x[i] = 0;
 		テレビ_y[i] = 400;
-		放物線_state[i] = 0;
+		カメラ_x[i] = 0;
+		カメラ_y[i] = 400;
+		電子レンジ_x[i] = 0;
+		電子レンジ_y[i] = 400;
+		//テレビ動き_state[i] = 0;
 		スピード_y[i] = 12;
+		シータ[i] = 0;
+	}
+
+	物_state[0] = 1;
+
+	for (int i = 1; i < 物の数; i++) {
+		物_state[i] = MathHelper_Random(1, 3);
 	}
 
 	プレイヤー_x = 100;
 	プレイヤー_y = 400;
 	当たり判定_x = 200;
 	当たり判定_y = 500;
-	放物線 = 5;
+	//テレビ動き = 5;
 
 	/*std::ifstream game_file("ゲームデータ.txt");
 	std::string dummy_line;
@@ -65,10 +154,9 @@ bool GameMain::Initialize()
 	game_file >> タイミング[3];
 
 	game_file >> タイミング[4];*/
-
-	return true;
 }
 
+void GameMain::髙橋Main() {
 /// <summary>
 /// Finalize will be called once per game and is the place to release
 /// all resource.
@@ -115,10 +203,10 @@ int GameMain::Update()
 		for (int i = 0; i < 物の数; i++) {
 
 			当たり判定_collision = Rect(当たり判定_x, 当たり判定_y, 当たり判定_x + 150, 当たり判定_y + 90);
-			物_collision[i] = Rect(テレビ_x[i], テレビ_y[i], テレビ_x[i] + 100, テレビ_y[i] + 100);
 
 			if (物_state[i] == 1) {
 				テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * テレビ速度;
+				テレビ_collision[i] = Rect(テレビ_x[i], テレビ_y[i], テレビ_x[i] + 100, テレビ_y[i] + 250);
 				if (テレビ_x[i] < 1280)
 				{
 					big[i] -= 0.013;
@@ -127,20 +215,23 @@ int GameMain::Update()
 				}
 				//if (テレビ_x[i] < 1280) {
 
-				//	if (テレビ_y[i] < 300) {
-				//		放物線_state[i] = 1;
-				//	}
+				if (テレビ_x[i] < 1280) {
 
-				//	if (放物線_state[i] == 0) {
-				//		テレビ_y[i] -= 放物線;
-				//	}
-				//	else if (放物線_state[i] == 1) {
-				//		テレビ_y[i] += 放物線;
-				//	}
-				//}
+					if (テレビ_y[i] < 300) {
+						放物線_state[i] = 1;
+					}
+
+					if (放物線_state[i] == 0) {
+						テレビ_y[i] -= 放物線;
+					}
+					else if (放物線_state[i] == 1) {
+						テレビ_y[i] += 放物線;
+					}
+				}
 			}
 			else if (物_state[i] == 2) {
-				テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * カメラ速度;
+				カメラ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * カメラ速度;
+				カメラ_collision[i] = Rect(カメラ_x[i], カメラ_y[i], カメラ_x[i] + 60, カメラ_y[i] + 64);
 
 				if (テレビ_x[i] < 1280) {
 					テレビ_y[i] = テレビ_y[i] - (スピード_y[i]--);
@@ -150,6 +241,17 @@ int GameMain::Update()
 				}
 			}
 			else if (物_state[i] == 3) {
+				電子レンジ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * 電子レンジ速度;
+				電子レンジ_collision[i] = Rect(電子レンジ_x[i] - 3, 電子レンジ_y[i], 電子レンジ_x[i] + 100, 電子レンジ_y[i] + 150);
+
+				if (電子レンジ_x[i] < 1280) {
+
+					電子レンジ_x[i] = 電子レンジ_x[i] - 2;
+////                                             動かしたいドット数↓　　↓最初の描画位置　 
+					電子レンジ_y[i] = MathHelper_Sin(シータ[i]) * 100 + 400;
+					シータ[i] = シータ[i] + 1;
+				}
+			}
 				テレビ_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * 電子レンジ速度;
 				if (テレビ_x[i] < 1280)
 				{
@@ -163,7 +265,19 @@ int GameMain::Update()
 
 				if (テレビ_x[i] < -400) {
 					物_state[i] = 0;
-					放物線_state[i] = 0;
+					//テレビ動き_state[i] = 0;
+					スピード_y[i] = 0;
+				}
+
+				if (カメラ_x[i] < -400) {
+					物_state[i] = 0;
+					//テレビ動き_state[i] = 0;
+					スピード_y[i] = 0;
+				}
+
+				if (電子レンジ_x[i] < -400) {
+					物_state[i] = 0;
+					//テレビ動き_state[i] = 0;
 					スピード_y[i] = 0;
 				}
 			}
@@ -171,7 +285,19 @@ int GameMain::Update()
 
 				if (テレビ_x[i] < -500) {
 					物_state[i] = 0;
-					放物線_state[i] = 0;
+					//テレビ動き_state[i] = 0;
+					開始_state = 3;
+				}
+
+				if (カメラ_x[i] < -500) {
+					物_state[i] = 0;
+					//テレビ動き_state[i] = 0;
+					開始_state = 3;
+				}
+
+				if (電子レンジ_x[i] < -500) {
+					物_state[i] = 0;
+					//テレビ動き_state[i] = 0;
 					開始_state = 3;
 				}
 			}
@@ -197,6 +323,8 @@ int GameMain::Update()
 	return 0;
 
 }
+
+void GameMain::髙橋Draw() {
 
 /// <summary>
 /// This is called when the game should draw itself.
@@ -233,9 +361,12 @@ void GameMain::Draw()
 				SpriteBatch.Draw(*テレビ, Vector3(テレビ_x[i], テレビ_y[i], 0.0f));
 			}
 			else if (物_state[i] == 2) {
-				SpriteBatch.Draw(*カメラ, Vector3(テレビ_x[i], テレビ_y[i], 0.0f));
+				SpriteBatch.Draw(*カメラ, Vector3(カメラ_x[i], カメラ_y[i], 0.0f));
 			}
 			else if (物_state[i] == 3) {
+				SpriteBatch.Draw(*電子レンジ, Vector3(電子レンジ_x[i], 電子レンジ_y[i], 0.0f));
+			}
+		}
 				SpriteBatch.Draw(*電子レンジ, Vector3(テレビ_x[i], テレビ_y[i], 0.0f));
 			}
 		}
