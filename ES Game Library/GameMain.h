@@ -5,7 +5,7 @@
 
 class GameMain : public CGameScene {
 public:
-	GameMain() : DefaultFont(GraphicsDevice.CreateDefaultFont())
+	GameMain()
 	{
 		//		ContentRootDirectory(_T("Content"));
 	}
@@ -59,6 +59,9 @@ public:
 
 private:
 	// 変数宣言
+	enum {
+		物の数 = 100,
+	};
 	SPRITE player;
 	SPRITE player_swing;
 	SPRITE player_Empty_swing;
@@ -87,17 +90,13 @@ private:
 	float perfect_x, perfect_y;
 	int hitcount = 0;
 	float Tv_alpha;
-	float big;
-	float circle_alpha;
+	float big[物の数];
+	float circle_alpha[物の数];
 	Rect  player_collision;
 	Rect  perfect_collision;
 	Rect  Tv_collision;
 	Rect  good_collision;
 	Rect  good2_collision;
-
-	enum {
-		物の数 = 100,
-	};
 
 	MEDIA ムービー;
 	SPRITE 背景;
@@ -134,6 +133,10 @@ private:
 
 	FONT フォント;
 
+	KeyboardState keyboard;
+	KeyboardBuffer key_buf;
 	// 関数宣言
-
+	void iwai_Initialize();
+	void iwai_Update();
+	void iwai_Draw();
 };
