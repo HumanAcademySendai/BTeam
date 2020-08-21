@@ -199,9 +199,8 @@ void GameMain::iwai_Update() {
 					good_se->Play();
 					explosion->SetTrackEnable(0, true);
 				}
-				else if (range > 250 && range < 500)
+				else if (range > 250 && range < 700)
 				{
-					hit_test = 3;
 					miss_se->Play();
 				}
 				else

@@ -92,6 +92,7 @@ private:
 	float big[•¨‚Ì”];
 	float circle_alpha[•¨‚Ì”];
 	float hard_speed;
+	float big_‚R‚„;
 	Rect  player_collision;
 	Rect  perfect_collision;
 	Rect  Tv_collision;
