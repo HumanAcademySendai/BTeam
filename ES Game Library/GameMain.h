@@ -130,6 +130,8 @@ private:
 	//int テレビ動き_state[物の数];
 	float スピード_y[物の数];
 	float シータ[物の数];
+	Vector3 ポイント[4];
+	float t[物の数];
 
 	Rect 当たり判定_collision;
 	Rect テレビ_collision[物の数];

@@ -55,7 +55,11 @@ private:
 private:
 	// 変数宣言
 	SPRITE title;
-
+	SPRITE memo;
+	SOUND perfect_se;
+	int count;
+	int flg;
+	int scene;
 	// 関数プロトタイプ
 
 };
