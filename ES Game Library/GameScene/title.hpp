@@ -51,15 +51,21 @@ public:
 
 private:
 	void Finalize();
-
+public:
+	static int hard;
 private:
 	// 変数宣言
 	SPRITE title;
 	SPRITE memo;
 	SOUND perfect_se;
+	SPRITE bat;
+	float bat_x, bat_y;
 	int count;
 	int flg;
 	int scene;
+	int hit;
+	FONT txt;
+	FONT smalltxt;
 	// 関数プロトタイプ
 
 };

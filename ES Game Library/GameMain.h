@@ -56,7 +56,6 @@ private:
 
 public:
 	static int score;
-
 private:
 	// •Ï”éŒ¾
 	enum {
@@ -92,11 +91,13 @@ private:
 	float Tv_alpha;
 	float big[•¨‚Ì”];
 	float circle_alpha[•¨‚Ì”];
+	float hard_speed;
 	Rect  player_collision;
 	Rect  perfect_collision;
 	Rect  Tv_collision;
 	Rect  good_collision;
 	Rect  good2_collision;
+	ANIMATIONMODEL explosion;
 
 	MEDIA ƒ€[ƒr[;
 	SPRITE ”wŒi;

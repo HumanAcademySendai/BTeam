@@ -3,7 +3,6 @@
 #include "GameMain.h"
 
 int GameMain::score = 0;
-
 #include <fstream>
 
 /// <summary>
@@ -111,6 +110,7 @@ void GameMain::iwai_Initialize() {
 	good_se = SoundDevice.CreateSoundFromFile(_T("good.wav"));
 	perfect_se = SoundDevice.CreateSoundFromFile(_T("perfect.wav"));
 	miss_se = SoundDevice.CreateSoundFromFile(_T("空振り.wav"));
+	explosion = GraphicsDevice.CreateAnimationModelFromFile(_T("bakuha.x"));
 	player_x = 100;
 	player_y = 350;
 	swing_flg = 0;
@@ -127,6 +127,10 @@ void GameMain::iwai_Initialize() {
 	hitcount = false;
 	swing_flg = false;
 	Tv_alpha = 1;
+	hard_speed = 1;
+	explosion->SetScale(1, -1, 1);
+	explosion->SetPosition(640, 360, 0);
+	explosion->SetTrackEnable(0, TRUE);
 	for (int i = 0; i < 物の数; i++)
 	{
 
@@ -139,8 +143,7 @@ void GameMain::iwai_Draw() {
 	GraphicsDevice.Clear(Color_CornflowerBlue);
 
 	GraphicsDevice.BeginScene();
-
-
+	explosion->Draw();
 	SpriteBatch.Begin();
 	SpriteBatch.Draw(*map, Vector3(0, 0, 0));
 	SpriteBatch.Draw(*Tv, Vector3(Tv_x, Tv_y, 0), Tv_alpha);
@@ -149,7 +152,7 @@ void GameMain::iwai_Draw() {
 	SpriteBatch.Draw(*hit_point, Vector3(300, 400, -100));
 	for (int i = 0; i < 物の数; i++)
 	{
-		SpriteBatch.Draw(*circle, Vector3(200, 300, 0), circle_alpha[i], Vector3(0, 0, 1), Vector3(200, 200, 0), Vector2(big[i], big[i]));
+		SpriteBatch.Draw(*circle, Vector3(200, 300, -10), circle_alpha[i], Vector3(0, 0, 1), Vector3(200, 200, 0), Vector2(big[i], big[i]));
 	}
 	SpriteBatch.Draw(*player, Vector3(player_x, player_y, 0), RectWH(clip_x, 0, 300, 300));
 	if (hit_test == 1)SpriteBatch.Draw(*perfect, Vector3(300, 400, 0));
@@ -237,9 +240,9 @@ void GameMain::髙橋Initialize() {
 
 	ムービー = MediaManager.CreateMediaFromFile(_T("シャイニングスターショート.mp3"));
 
-	カメラ速度 = 15;
-	電子レンジ速度 = 5;
-	テレビ速度 = 10;
+	カメラ速度 = 15 ;
+	電子レンジ速度 = 6 / titleScene::hard;
+	テレビ速度 = 10 * titleScene::hard;
 	秒 = 0;
 	一秒 = 0;
 	開始_state = 0;
@@ -336,7 +339,7 @@ void GameMain::髙橋Main() {
 					Vector3 bezier = Vector3_Bezier(ポイント[0], ポイント[1], ポイント[2], ポイント[3], t[i]);
 					カメラ_x[i] = bezier.x;
 					カメラ_y[i] = bezier.y;
-					t[i] = t[i] + 0.02f;
+					t[i] = t[i] + 0.02f * titleScene::hard;
 					カメラ_collision[i] = Rect(bezier.x, bezier.y, bezier.x + 60, bezier.y + 64);
 					big[i] -= 0.013;
 					circle_alpha[i] = 0.5;
@@ -348,12 +351,12 @@ void GameMain::髙橋Main() {
 				電子レンジ_collision[i] = Rect(電子レンジ_x[i] - 3, 電子レンジ_y[i], 電子レンジ_x[i] + 100, 電子レンジ_y[i] + 150);
 
 				if (電子レンジ_x[i] < 1280) {
-						big[i] -= 0.0075;
+						big[i] -= 0.007;
 						circle_alpha[i] = 0.5;
 						hitcount = false;
 					電子レンジ_x[i] = 電子レンジ_x[i] - 2;
 					////                                             動かしたいドット数↓　　↓最初の描画位置　 
-					電子レンジ_y[i] = MathHelper_Sin(シータ[i]) * 90 + 400;
+					電子レンジ_y[i] = MathHelper_Sin(シータ[i]) * 90 * titleScene::hard + 400;
 					シータ[i] = シータ[i] + 1;
 				}
 			}
