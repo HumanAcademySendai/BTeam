@@ -11,7 +11,11 @@ bool titleScene::Initialize()
 {
 	// TODO: Add your initialization logic here
 	title = GraphicsDevice.CreateSpriteFromFile(_T("title.png"));
-
+	memo = GraphicsDevice.CreateSpriteFromFile(_T("‘€ìà–¾.png"));
+	perfect_se = SoundDevice.CreateSoundFromFile(_T("perfect.wav"));
+	count = 0;
+	flg = false;
+	scene = 0;
 	return true;
 }
 
@@ -36,9 +40,21 @@ int titleScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer Key_buf = Keyboard->GetBuffer();
-	if (Key_buf.IsPressed(Keys_Space))
+	//if () 
 	{
-		return GAME_SCENE(new GameMain);
+		if (Key_buf.IsPressed(Keys_Space))
+		{
+			perfect_se->Play();
+			flg = true;
+		}
+		if (flg == true)
+		{
+			count++;
+		}
+		if (count >= 120)
+		{
+			return GAME_SCENE(new GameMain);
+		}
 	}
 	return 0;
 }
@@ -54,7 +70,8 @@ void titleScene::Draw()
 	GraphicsDevice.BeginScene();
 
 	SpriteBatch.Begin();
-	SpriteBatch.Draw(*title, Vector3(0, 0, 0));
+	if (scene == 0)SpriteBatch.Draw(*title, Vector3(0, 0, 0));
+	if(scene == 1)SpriteBatch.Draw(*memo, Vector3(0, 0, 0));
 	SpriteBatch.End();
 
 	GraphicsDevice.EndScene();
