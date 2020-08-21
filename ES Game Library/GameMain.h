@@ -56,7 +56,6 @@ private:
 
 public:
 	static int score;
-
 private:
 	// •Ï”éŒ¾
 	enum {
@@ -88,16 +87,19 @@ private:
 	int count;
 	float good_x,good_y;
 	float perfect_x, perfect_y;
-	int hitcount = 0;
+	int hitcount[•¨‚Ì”];
 	float Tv_alpha;
 	float big[•¨‚Ì”];
 	float circle_alpha[•¨‚Ì”];
+	float hard_speed;
+	float big_‚R‚„;
 	Rect  player_collision;
 	Rect  perfect_collision;
 	Rect  Tv_collision;
 	Rect  good_collision;
 	Rect  good2_collision;
-
+	ANIMATIONMODEL explosion;
+	CAMERA camera;
 	MEDIA ƒ€[ƒr[;
 	SPRITE ”wŒi;
 	SPRITE ƒvƒŒƒCƒ„[;
@@ -150,4 +152,7 @@ private:
 	void iwai_Initialize();
 	void iwai_Update();
 	void iwai_Draw();
+	void ‚R‚„_Initialize();
+	void ‚R‚„_Update();
+	void ‚R‚„_Draw();
 };
