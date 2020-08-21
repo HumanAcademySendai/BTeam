@@ -235,7 +235,7 @@ void GameMain::髙橋Initialize() {
 
 	MediaManager.Attach(GraphicsDevice);
 
-	ムービー = MediaManager.CreateMediaFromFile(_T("シャイニングスターショート.mp3"));
+	ムービー = MediaManager.CreateMediaFromFile(_T("ロボット工場.mp3"));
 
 	カメラ速度 = 15;
 	電子レンジ速度 = 5;
@@ -263,7 +263,7 @@ void GameMain::髙橋Initialize() {
 	物_state[0] = 1;
 
 	for (int i = 1; i < 物の数; i++) {
-		物_state[i] = MathHelper_Random(1, 3);
+		物_state[i] = 3;  //MathHelper_Random(1, 3);
 	}
 
 	プレイヤー_x = 100;
