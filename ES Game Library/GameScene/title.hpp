@@ -60,12 +60,19 @@ private:
 	SOUND perfect_se;
 	SPRITE bat;
 	float bat_x, bat_y;
+	float txt_x, txt_y;
+	float txt_x2, txt_y2;
+	float bat_roll,roll,roll2;
 	int count;
 	int flg;
 	int scene;
 	int hit;
 	FONT txt;
 	FONT smalltxt;
+
+	RENDERTARGET font;
+	RENDERTARGET font2;
+
 	// 関数プロトタイプ
 
 };

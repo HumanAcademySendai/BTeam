@@ -87,7 +87,7 @@ private:
 	int count;
 	float good_x,good_y;
 	float perfect_x, perfect_y;
-	int hitcount = 0;
+	int hitcount[物の数];
 	float Tv_alpha;
 	float big[物の数];
 	float circle_alpha[物の数];
@@ -98,7 +98,7 @@ private:
 	Rect  good_collision;
 	Rect  good2_collision;
 	ANIMATIONMODEL explosion;
-
+	CAMERA camera;
 	MEDIA ムービー;
 	SPRITE 背景;
 	SPRITE プレイヤー;
@@ -151,4 +151,7 @@ private:
 	void iwai_Initialize();
 	void iwai_Update();
 	void iwai_Draw();
+	void ３ｄ_Initialize();
+	void ３ｄ_Update();
+	void ３ｄ_Draw();
 };
