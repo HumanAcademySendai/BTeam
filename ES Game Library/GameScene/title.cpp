@@ -86,6 +86,7 @@ int titleScene::Update()
 			}
 			if (count >= 80)
 			{
+				titleScene::hard = 1;
 				return GAME_SCENE(new GameMain);
 			}
 		}

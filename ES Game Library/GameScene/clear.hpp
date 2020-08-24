@@ -55,6 +55,14 @@ private:
 private:
 	// •Ï”éŒ¾
 	SPRITE clear_;
+	SPRITE a;
+	SPRITE b;
+	SPRITE c;
+	float a_roll;
+	float a_big;
+	float b_big;
+	float c_roll;
+	int count;
 	FONT txt;
 	FONT bigtxt;
 

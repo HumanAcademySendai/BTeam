@@ -12,8 +12,16 @@ bool clearScene::Initialize()
 	// TODO: Add your initialization logic here
 	GameMain::score;
 	clear_ = GraphicsDevice.CreateSpriteFromFile(_T("clear.png"));
+	a = GraphicsDevice.CreateSpriteFromFile(_T("A.png"));
+	b = GraphicsDevice.CreateSpriteFromFile(_T("b.png"));
+	c = GraphicsDevice.CreateSpriteFromFile(_T("c.png"));
 	txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 50);
 	bigtxt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 150);
+	a_roll = 0;
+	a_big = 4.6;
+	b_big = 3;
+	count = 0;
+	c_roll = 0;
 	return true;
 }
 
@@ -37,8 +45,29 @@ void clearScene::Finalize()
 int clearScene::Update()
 {
     // TODO: Add your update logic here
-
-	//åüèÿóp
+	count++;
+	if (count < 360)
+	{
+		a_big -= 0.01;
+		a_roll++;
+	}
+	if (count >= 360)
+	{
+		a_roll = 0;
+		a_big = 1;
+	}
+	if (b_big > 1)
+	{
+		b_big -= 0.05;
+	}
+	if (b_big <= 1)
+	{
+		b_big = 1;
+	}
+	if (count > 40)
+	{
+		c_roll = -35;
+	}
 	KeyboardBuffer key_buf = Keyboard->GetBuffer();
 	if (key_buf.IsPressed(Keys_Enter))
 	{
@@ -60,9 +89,10 @@ void clearScene::Draw()
 	SpriteBatch.Begin();
 	SpriteBatch.Draw(*clear_, Vector3(0, 0, 0));
 	SpriteBatch.DrawString(txt, Vector2(350, 40), Color(255, 255, 255), _T("ÉXÉRÉA:%d"), GameMain::score);
-	if (GameMain::score >= 0 && GameMain::score < 300)SpriteBatch.DrawString(bigtxt, _T("ï]âøÅFC"), Vector2(350,300), Color(255, 0, 0));
-	if (GameMain::score >= 300 && GameMain::score < 1000)SpriteBatch.DrawString(bigtxt, _T("ï]âøÅFB"), Vector2(350, 300), Color(255, 0, 0));
-	if (GameMain::score >= 1000 )SpriteBatch.DrawString(bigtxt, _T("ï]âøÅFA"), Vector2(350, 300), Color(255, 0, 0));
+	if (GameMain::score >= 0 && GameMain::score < 300)SpriteBatch.Draw(*c, Vector3(700, 230, 0), 1.0f, Vector3(0, 0, c_roll), Vector3(110, 112, 0), Vector2(1, 1));
+	if (GameMain::score >= 300 && GameMain::score < 1000)SpriteBatch.Draw(*b, Vector3(700, 230, 0), 1.0f, Vector3(0, 0, 0), Vector3(114, 112, 0), Vector2(b_big, b_big));
+	if (GameMain::score >= 1000)SpriteBatch.Draw(*a, Vector3(700,230,0), 1.0f, Vector3(0, 0, a_roll), Vector3(110, 110, 0), Vector2(a_big, a_big));
+	SpriteBatch.DrawString(bigtxt, _T("ï]âø:"), Vector2(350, 300), Color(255, 0, 0));
 	SpriteBatch.End();
 
 	GraphicsDevice.EndScene();
