@@ -40,7 +40,7 @@ int GameMain::Update()
 	iwai_Update();
 	３ｄ_Update();
 	//当たり判定同士の距離を測って判定
-	if (count <= 0)
+	if (開始_state == 5)
 	{
 		return GAME_SCENE(new clearScene);
 	}
@@ -103,7 +103,7 @@ void GameMain::Draw()
 	GraphicsDevice.UnlockCanvas();
 }
 void GameMain::iwai_Initialize() {
-	player = GraphicsDevice.CreateSpriteFromFile(_T("プロト.png"));
+	player = GraphicsDevice.CreateSpriteFromFile(_T("プレイヤーキャラ_20.png"));
 	player_swing = GraphicsDevice.CreateSpriteFromFile(_T("player2.png"));
 	map = GraphicsDevice.CreateSpriteFromFile(_T("map.png"));
 	perfect = GraphicsDevice.CreateSpriteFromFile(_T("perfect.png"));
@@ -121,7 +121,7 @@ void GameMain::iwai_Initialize() {
 	ready = GraphicsDevice.CreateSpriteFromFile(_T("ready.png"));
 	go = GraphicsDevice.CreateSpriteFromFile(_T("go.png"));
 	txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 50);
-	player_x = 100;
+	player_x = 150;
 	player_y = 350;
 	swing_flg = 0;
 	Tv_x = 1200;
@@ -145,7 +145,7 @@ void GameMain::iwai_Initialize() {
 	for (int i = 0; i < 物の数; i++)
 	{
 		hitcount[i] = false;
-		big[i] = 1;
+		big[i] = 1.1;
 		circle_alpha[i] = 0;
 		テレビ_aplha[i] = 1;
 		カメラ_aplha[i] = 1;
@@ -168,7 +168,7 @@ void GameMain::iwai_Draw() {
 	{
 		SpriteBatch.Draw(*circle, Vector3(200, 300, -10), circle_alpha[i], Vector3(0, 0, 1), Vector3(200, 200, 0), Vector2(big[i], big[i]));
 	}
-	SpriteBatch.Draw(*player, Vector3(player_x, player_y, 0), RectWH(clip_x, 0, 300, 300));
+	SpriteBatch.Draw(*player, Vector3(player_x, player_y, 0), RectWH(clip_x, 0, 350, 300));
 	if (hit_test == 1)SpriteBatch.Draw(*perfect, Vector3(300, 400, 0));
 	if (hit_test == 2)SpriteBatch.Draw(*good, Vector3(280, 400, 0));
 	if (hit_test == 3)SpriteBatch.Draw(*miss, Vector3(280, 400, 0));
@@ -182,6 +182,8 @@ void GameMain::iwai_Draw() {
 }
 void GameMain::iwai_Update() {
 
+	count--;
+
 	if (titleScene::hard == 2)
 	{
 		for (int i = 0; i < 物の数; i++)
@@ -192,7 +194,7 @@ void GameMain::iwai_Update() {
 	good_collision = Rect(good_x, good_y, good_x + 200.0f, good_y + 200.0f);
 	perfect_collision = Rect(perfect_x + 70, perfect_y, perfect_x + 170.0f, perfect_y + 200.0f);
 	miss_collision = Rect(miss_x , miss_y + 0, miss_x + 300.0f, Tv_y + 200.0f);
-		if (keyboard.IsKeyDown(Keys_Space) && swing_flg == false)
+		if (key_buf.IsPressed(Keys_Space) && swing_flg == false)
 		{
 			for (int i = 0; i < 物の数; i++)
 			{
@@ -225,30 +227,40 @@ void GameMain::iwai_Update() {
 				}
 				else if (miss_collision.Intersect(テレビ_collision[i]) && hitcount[i] == false || miss_collision.Intersect(カメラ_collision[i]) && hitcount[i] == false || miss_collision.Intersect(電子レンジ_collision[i]) && hitcount[i] == false)
 				{
-					hit_test = 3;
-					miss_se->Play();
-					combo = 0;
+					if (titleScene::hard == 2)
+					{
+					}
+					else
+					{
+						hit_test = 3;
+						miss_se->Play();
+						combo = 0;
+						hitcount[i] = true;
+						テレビ_aplha[i] = 0;
+						カメラ_aplha[i] = 0;
+						電子レンジ_aplha[i] = 0;
+					}
 				}
 			}
 		}
 
-	if (keyboard.IsKeyUp(Keys_Space) && swing_flg == true)
+	//if (keyboard.IsKeyUp(Keys_Space) && swing_flg == true)
+	//{
+	//	clip_x = 0;
+	//	hit_test = 0;
+	//	swing_flg = false;
+	//}
+	range = Tv_x - player_x;
+	if (swing_flg == true)
+	{
+		clip_x += 350;
+	}
+	if (clip_x >= 6650)
 	{
 		clip_x = 0;
 		hit_test = 0;
 		swing_flg = false;
 	}
-	range = Tv_x - player_x;
-	if (swing_flg == true)
-	{
-		clip_x += 300;
-		if (clip_x >= 2100)
-		{
-			clip_x = 2100;
-		}
-	}
-
-	count--;
 	for (int i = 0; i < 物の数; i++)
 	{
 		if (big[i] <= 0)
@@ -278,6 +290,7 @@ void GameMain::髙橋Initialize() {
 	電子レンジ = GraphicsDevice.CreateSpriteFromFile(_T("電子レンジ.png"));
 	当たり判定 = GraphicsDevice.CreateSpriteFromFile(_T("当たり判定.png"));
 	フォント = GraphicsDevice.CreateSpriteFont(_T("MSゴシック"), 50);
+	巨大テレビ = GraphicsDevice.CreateSpriteFromFile(_T("巨大テレビ.png"));
 
 	MediaManager.Attach(GraphicsDevice);
 
@@ -286,11 +299,14 @@ void GameMain::髙橋Initialize() {
 	カメラ速度 = 15 ;
 	電子レンジ速度 = 6 / titleScene::hard;
 	テレビ速度 = 10 * titleScene::hard;
+	巨大テレビ速度 = 5 * titleScene::hard;
 	秒 = 0;
 	一秒 = 0;
 	開始_state = 0;
 	ムービー時間 = 0;
 	デバック = 0;
+	巨大テレビ連打数 = 15 * titleScene::hard;
+	巨大テレビ_state = 0;
 
 	for (int i = 0; i < 物の数; i++) {
 		ゴール[i] = 100 + (150 * i);
@@ -316,6 +332,8 @@ void GameMain::髙橋Initialize() {
 	プレイヤー_y = 400;
 	当たり判定_x = 200;
 	当たり判定_y = 500;
+	巨大テレビ_x = 1000;
+	巨大テレビ_y = 200;
 	//テレビ動き = 5;
 	ポイント[0] = Vector3(1280, 400, 0);
 	ポイント[1] = Vector3(800, 300, 0);
@@ -354,6 +372,19 @@ void GameMain::髙橋Main() {
 
 	if (一秒 == 3) {
 		開始_state = 1;
+	}
+	else if (一秒 == 45) {
+		開始_state = 2;
+		フォント_state = 1;
+	}
+	else if (一秒 == 53) {
+		ムービー->Stop();
+	}
+	else if (一秒 == 55) {
+		開始_state = 4;
+	}
+	else if (一秒 == 58) {
+		開始_state = 5;
 	}
 
 	if (開始_state == 1 || 開始_state == 2) {
@@ -454,8 +485,35 @@ void GameMain::髙橋Main() {
 			}
 		}
 	}
-	if (一秒 == 85) {
-		開始_state = 2;
+	else if (開始_state == 3) {
+		巨大テレビ_collision = Rect(巨大テレビ_x, 巨大テレビ_y, 巨大テレビ_x + 150, 巨大テレビ_y + 500);
+		巨大テレビ_x = 巨大テレビ_x - 巨大テレビ速度;
+
+		if (巨大テレビ_state == 0) {
+
+			if (key_buf.IsPressed(Keys_Space)) {
+
+				if (perfect_collision.Intersect(巨大テレビ_collision)) {
+					巨大テレビ連打数 -= 1;
+					巨大テレビ_x += 60;
+					perfect_se->Play();
+					explosion->SetTrackPosition(0, 0);
+					explosion->SetTrackEnable(0, true);
+				}
+			}
+
+			if (巨大テレビ連打数 <= 0) {
+				巨大テレビ_state = 1;
+			}
+
+			if (巨大テレビ_x < 100) {
+
+			}
+		}
+		else if (巨大テレビ_state == 1) {
+			explosion->SetTrackPosition(0, 0);
+			explosion->SetTrackEnable(0, true);
+		}
 	}
 }
 void GameMain::髙橋Draw()
@@ -495,6 +553,12 @@ void GameMain::髙橋Draw()
 				SpriteBatch.Draw(*電子レンジ, Vector3(電子レンジ_x[i], 電子レンジ_y[i], 0.0f), 電子レンジ_aplha[i]);
 			}
 		}
+	}
+	else if (開始_state == 3 && 巨大テレビ_state == 0) {
+
+		SpriteBatch.DrawString(フォント, Vector2(300, 300), Color(255, 255, 255), _T("8Kテレビ体力:%d"), 巨大テレビ連打数);
+		SpriteBatch.DrawString(フォント, Vector2(700, 200), Color(0, 255, 255), _T("連打して8Kテレビを壊せ!!"));
+		SpriteBatch.Draw(*巨大テレビ, Vector3(巨大テレビ_x, 巨大テレビ_y, 10.0f));
 	}
 }
 void GameMain::３ｄ_Initialize()

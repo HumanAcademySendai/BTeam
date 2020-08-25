@@ -101,6 +101,7 @@ private:
 	float カメラ_aplha[物の数];
 	float テレビ_aplha[物の数];
 	float 電子レンジ_aplha[物の数];
+	int フォント_state;
 	int combo;
 	FONT txt;
 	Rect  player_collision;
@@ -144,6 +145,13 @@ private:
 	float シータ[物の数];
 	Vector3 ポイント[4];
 	float t[物の数];
+
+	SPRITE 巨大テレビ;
+	int 巨大テレビ連打数;
+	int 巨大テレビ_state;
+	Rect 巨大テレビ_collision;
+	float 巨大テレビ_x, 巨大テレビ_y;
+	float 巨大テレビ速度;
 
 	Rect 当たり判定_collision;
 	Rect テレビ_collision[物の数];

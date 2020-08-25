@@ -17,11 +17,17 @@ bool clearScene::Initialize()
 	c = GraphicsDevice.CreateSpriteFromFile(_T("c.png"));
 	txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 50);
 	bigtxt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 150);
+	big_se = SoundDevice.CreateSoundFromFile(_T("bigw.wav"));
+	small_se = SoundDevice.CreateSoundFromFile(_T("w.wav"));
+	tin_se = SoundDevice.CreateSoundFromFile(_T("tin.wav"));
 	a_roll = 0;
 	a_big = 4.6;
 	b_big = 3;
 	count = 0;
 	c_roll = 0;
+	if (GameMain::score >= 0 && GameMain::score < 300) tin_se->Play();
+	if (GameMain::score >= 300 && GameMain::score < 1000)small_se->Play();
+	if (GameMain::score >= 1000)big_se->Play();
 	return true;
 }
 
@@ -32,7 +38,6 @@ bool clearScene::Initialize()
 void clearScene::Finalize()
 {
 	// TODO: Add your finalization logic here
-
 }
 
 /// <summary>
@@ -46,15 +51,15 @@ int clearScene::Update()
 {
     // TODO: Add your update logic here
 	count++;
-	if (count < 360)
+	if (count < 60)
 	{
-		a_big -= 0.01;
-		a_roll++;
+		a_big -= 0.06;
+		a_roll+= 6;
 	}
-	if (count >= 360)
+	if (count >= 60)
 	{
 		a_roll = 0;
-		a_big = 1;
+		a_big = 1; 
 	}
 	if (b_big > 1)
 	{
@@ -73,7 +78,6 @@ int clearScene::Update()
 	{
 		return GAME_SCENE(new titleScene);
 	}
-
 	return 0;
 }
 

@@ -65,6 +65,9 @@ private:
 	int count;
 	FONT txt;
 	FONT bigtxt;
+	SOUND big_se;
+	SOUND small_se;
+	SOUND tin_se;
 
 	// 関数プロトタイプ
 
