@@ -84,7 +84,7 @@ private:
 	int swing_flg;
 	float life_y;
 	float clip_x;
-	int count;
+	//int count;
 	float good_x,good_y;
 	float perfect_x, perfect_y;
 	int hitcount[物の数];
@@ -107,6 +107,7 @@ private:
 	SPRITE カメラ;
 	SPRITE 電子レンジ;
 	SPRITE 当たり判定;
+	SPRITE 巨大テレビ;
 
 	_int64 moviepos;
 
@@ -117,28 +118,39 @@ private:
 	float 電子レンジ速度;
 	float テレビ速度;
 	float カメラ速度;
+	float 巨大テレビ速度;
 	float テレビ_x[物の数], テレビ_y[物の数];
 	float カメラ_x[物の数], カメラ_y[物の数];
 	float 電子レンジ_x[物の数], 電子レンジ_y[物の数];
 	float プレイヤー_x, プレイヤー_y;
 	float 当たり判定_x, 当たり判定_y;
+	float 巨大テレビ_x, 巨大テレビ_y;
 	int ゴール[物の数];
 	char comma;
 	int ムービー時間;
 	int 物_state[物の数];
 	int 数;
 	int デバック;
+	int 巨大テレビ連打数;
+	int 巨大テレビ_state;
 	//int テレビ動き;
 	//int テレビ動き_state[物の数];
 	float スピード_y[物の数];
 	float シータ[物の数];
 	Vector3 ポイント[4];
 	float t[物の数];
+	int フォント_state;
+
+	SPRITE ガス缶;
+	float ガス缶速度;
+	float ガス缶_x[物の数], ガス缶_y[物の数];
+	Rect ガス缶_collision[物の数];
 
 	Rect 当たり判定_collision;
 	Rect テレビ_collision[物の数];
 	Rect カメラ_collision[物の数];
 	Rect 電子レンジ_collision[物の数];
+	Rect 巨大テレビ_collision;
 
 	FONT フォント;
 

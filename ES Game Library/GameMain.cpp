@@ -40,7 +40,7 @@ int GameMain::Update()
 	iwai_Update();
 	３ｄ_Update();
 	//当たり判定同士の距離を測って判定
-	if (count <= 0)
+	if (開始_state == 5)
 	{
 		return GAME_SCENE(new clearScene);
 	}
@@ -84,8 +84,12 @@ void GameMain::Draw()
 	//canvas.DrawRect(Tv_collision, paint);
 	//paint.SetPaintColor(Color_Blue);
 	//canvas.DrawRect(当たり判定_collision, paint);
-	//for (int i = 0; i < 物の数; i++) {
+	paint.SetPaintColor(Color_Blue);
+	canvas.DrawRect(巨大テレビ_collision, paint);
+	for (int i = 0; i < 物の数; i++) {
 
+		paint.SetPaintColor(Color_Blue);
+		canvas.DrawRect(ガス缶_collision[i], paint);
 	//	if (物_state[i] == 1) {
 	//		paint.SetPaintColor(Color_Red);
 	//		canvas.DrawRect(テレビ_collision[i], paint);
@@ -98,7 +102,7 @@ void GameMain::Draw()
 	//		paint.SetPaintColor(Color_Red);
 	//		canvas.DrawRect(電子レンジ_collision[i], paint);
 	//	}
-	//}
+	}
 	GraphicsDevice.UnlockCanvas();
 }
 void GameMain::iwai_Initialize() {
@@ -124,7 +128,6 @@ void GameMain::iwai_Initialize() {
 	Tv_y = 400;
 	life_y = 0;
 	clip_x = 0;
-	count = 1500;
 	perfect_x = 280;
 	perfect_y = 400;
 	good_x = 300;
@@ -161,7 +164,7 @@ void GameMain::iwai_Draw() {
 	if (hit_test == 2)SpriteBatch.Draw(*good, Vector3(280, 400, 0));
 	if (hit_test == 3)SpriteBatch.Draw(*miss, Vector3(280, 400, 0));
 	SpriteBatch.DrawString(DefaultFont, Vector2(350, 0), Color(0, 0, 0), _T("距離:%f"), range);
-	SpriteBatch.DrawString(DefaultFont, Vector2(350, 20), Color(0, 0, 0), _T("タイム:%d"), count);
+	SpriteBatch.DrawString(DefaultFont, Vector2(350, 20), Color(0, 0, 0), _T("タイム:%d"), 一秒);
 	SpriteBatch.DrawString(DefaultFont, Vector2(350, 40), Color(0, 0, 0), _T("スコア:%d"), score);
 	SpriteBatch.DrawString(DefaultFont, Vector2(350, 60), Color(0, 0, 0), _T("破壊:%f"), explosion->GetTrackPosition(0));
 }
@@ -226,7 +229,6 @@ void GameMain::iwai_Update() {
 		}
 	}
 
-	count--;
 	for (int i = 0; i < 物の数; i++)
 	{
 		if (big[i] <= 0)
@@ -247,6 +249,8 @@ void GameMain::髙橋Initialize() {
 	電子レンジ = GraphicsDevice.CreateSpriteFromFile(_T("電子レンジ.png"));
 	当たり判定 = GraphicsDevice.CreateSpriteFromFile(_T("当たり判定.png"));
 	フォント = GraphicsDevice.CreateSpriteFont(_T("MSゴシック"), 50);
+	巨大テレビ = GraphicsDevice.CreateSpriteFromFile(_T("巨大テレビ.png"));
+	ガス缶 = GraphicsDevice.CreateSpriteFromFile(_T("ガス缶.png"));
 
 	MediaManager.Attach(GraphicsDevice);
 
@@ -255,11 +259,15 @@ void GameMain::髙橋Initialize() {
 	カメラ速度 = 15 ;
 	電子レンジ速度 = 6 / titleScene::hard;
 	テレビ速度 = 10 * titleScene::hard;
+	巨大テレビ速度 = 5 * titleScene::hard;
 	秒 = 0;
 	一秒 = 0;
 	開始_state = 0;
 	ムービー時間 = 0;
 	デバック = 0;
+	巨大テレビ連打数 = 15 * titleScene::hard;
+	巨大テレビ_state = 0;
+	フォント_state = 0;
 
 	for (int i = 0; i < 物の数; i++) {
 		ゴール[i] = 100 + (150 * i);
@@ -269,6 +277,8 @@ void GameMain::髙橋Initialize() {
 		カメラ_y[i] = 400;
 		電子レンジ_x[i] = 0;
 		電子レンジ_y[i] = 400;
+		ガス缶_x[i] = 0;
+		ガス缶_y[i] = 400;
 		//テレビ動き_state[i] = 0;
 		スピード_y[i] = 7;
 		シータ[i] = 0;
@@ -278,13 +288,15 @@ void GameMain::髙橋Initialize() {
 	物_state[0] = 1;
 
 	for (int i = 1; i < 物の数; i++) {
-		物_state[i] = 3;  //MathHelper_Random(1, 3);
+		物_state[i] = MathHelper_Random(1, 4);
 	}
 
 	プレイヤー_x = 100;
 	プレイヤー_y = 400;
 	当たり判定_x = 200;
 	当たり判定_y = 500;
+	巨大テレビ_x = 1000;
+	巨大テレビ_y = 200;
 	//テレビ動き = 5;
 	ポイント[0] = Vector3(1280, 400, 0);
 	ポイント[1] = Vector3(800, 300, 0);
@@ -323,6 +335,19 @@ void GameMain::髙橋Main() {
 
 	if (一秒 == 3) {
 		開始_state = 1;
+	}
+	else if (一秒 == 45) {
+		開始_state = 2;
+		フォント_state = 1;
+	}
+	else if (一秒 == 53) {
+		ムービー->Stop();
+	}
+	else if (一秒 == 55) {
+		開始_state = 4;
+	}
+	else if (一秒 == 58) {
+		開始_state = 5;
 	}
 
 	if (開始_state == 1 || 開始_state == 2) {
@@ -369,6 +394,16 @@ void GameMain::髙橋Main() {
 					シータ[i] = シータ[i] + 1;
 				}
 			}
+			else if (物_state[i] == 4) {
+				ガス缶_x[i] = プレイヤー_x + (ゴール[i] - ムービー時間) * 電子レンジ速度;
+				ガス缶_collision[i] = Rect(ガス缶_x[i], ガス缶_y[i], ガス缶_x[i] + 75, ガス缶_y[i] + 150);
+				if (ガス缶_x[i] < 1280)
+				{
+					big[i] -= 0.0138;
+					circle_alpha[i] = 0.5;
+				}
+			}
+
 			if (開始_state == 1) {
 
 				if (テレビ_x[i] < -400) {
@@ -394,6 +429,12 @@ void GameMain::髙橋Main() {
 					//テレビ動き_state[i] = 0;
 					スピード_y[i] = 0;
 				}
+
+				if (ガス缶_x[i] < -400) {
+					物_state[i] = 0;
+					//テレビ動き_state[i] = 0;
+					スピード_y[i] = 0;
+				}
 			}
 			else if (開始_state == 2) {
 
@@ -409,10 +450,11 @@ void GameMain::髙橋Main() {
 					開始_state = 3;
 				}
 
-				if (カメラ_y[i] > 1100) {
+				if (カメラ_y[i] < 900) {
 					物_state[i] = 0;
 					//テレビ動き_state[i] = 0;
 					スピード_y[i] = 0;
+					開始_state = 3;
 				}
 
 				if (電子レンジ_x[i] < -500) {
@@ -420,11 +462,44 @@ void GameMain::髙橋Main() {
 					//テレビ動き_state[i] = 0;
 					開始_state = 3;
 				}
+
+				if (ガス缶_x[i] < -500) {
+					物_state[i] = 0;
+					//テレビ動き_state[i] = 0;
+					開始_state = 3;
+				}
 			}
 		}
 	}
-	if (一秒 == 85) {
-		開始_state = 2;
+	else if (開始_state == 3) {
+		巨大テレビ_collision = Rect(巨大テレビ_x, 巨大テレビ_y, 巨大テレビ_x + 150, 巨大テレビ_y + 500);
+		巨大テレビ_x = 巨大テレビ_x - 巨大テレビ速度;
+
+		if (巨大テレビ_state == 0) {
+
+			if (key_buf.IsPressed(Keys_Space)) {
+
+				if (perfect_collision.Intersect(巨大テレビ_collision)){
+					巨大テレビ連打数 -= 1;
+					巨大テレビ_x += 60;
+					perfect_se->Play();
+					explosion->SetTrackPosition(0, 0);
+					explosion->SetTrackEnable(0, true);
+				}
+			}
+
+			if (巨大テレビ連打数 <= 0) {
+				巨大テレビ_state = 1;
+			}
+
+			if (巨大テレビ_x < 100) {
+
+			}
+		}
+		else if (巨大テレビ_state == 1) {
+			explosion->SetTrackPosition(0, 0);
+			explosion->SetTrackEnable(0, true);
+		}
 	}
 }
 void GameMain::髙橋Draw()
@@ -438,7 +513,7 @@ void GameMain::髙橋Draw()
 	SpriteBatch.DrawString(フォント, Vector2(0, 0), Color(255, 255, 255), _T("%ld"), ムービー->GetPosition() / 100000);
 	SpriteBatch.DrawString(フォント, Vector2(500, 0), Color(255, 255, 255), _T("%d"), 一秒);
 
-	if (開始_state == 3) {
+	if (開始_state == 5) {
 		SpriteBatch.DrawString(フォント, Vector2(1000, 0), Color(255, 255, 255), _T("クリア"));
 	}
 	SpriteBatch.Draw(*背景, Vector3(0.0f, 0.0f, 10.0f));
@@ -447,6 +522,10 @@ void GameMain::髙橋Draw()
 
 	if (デバック == 1) {
 		SpriteBatch.DrawString(フォント, Vector2(1000, 50), Color(255, 255, 255), _T("当たってる"));
+	}
+
+	if (フォント_state == 1 && 巨大テレビ_state == 0) {
+		
 	}
 
 	if (開始_state == 1 || 開始_state == 2) {
@@ -463,7 +542,16 @@ void GameMain::髙橋Draw()
 			else if (物_state[i] == 3) {
 				SpriteBatch.Draw(*電子レンジ, Vector3(電子レンジ_x[i], 電子レンジ_y[i], 0.0f));
 			}
+			else if (物_state[i] == 4) {
+				SpriteBatch.Draw(*ガス缶, Vector3(ガス缶_x[i], ガス缶_y[i], 0.0f));
+			}
 		}
+	}
+	else if (開始_state == 3 && 巨大テレビ_state == 0) {
+
+		SpriteBatch.DrawString(フォント, Vector2(300,300), Color(255, 255, 255), _T("8Kテレビ体力:%d"),巨大テレビ連打数);
+		SpriteBatch.DrawString(フォント, Vector2(700, 200), Color(0, 255, 255), _T("連打して8Kテレビを壊せ!!"));
+		SpriteBatch.Draw(*巨大テレビ, Vector3(巨大テレビ_x, 巨大テレビ_y, 10.0f));
 	}
 }
 void GameMain::３ｄ_Initialize()
