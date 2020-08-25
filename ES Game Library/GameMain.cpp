@@ -75,7 +75,8 @@ void GameMain::Draw()
 
 	Paint paint;
 
-
+	//paint.SetPaintColor(Color_Blue);
+	//canvas.DrawRect(miss_collision, paint);
 	//paint.SetPaintColor(Color_Red);
 	//canvas.DrawRect(good_collision, paint);
 	//paint.SetPaintColor(Color_Green);
@@ -106,7 +107,7 @@ void GameMain::Draw()
 	GraphicsDevice.UnlockCanvas();
 }
 void GameMain::iwai_Initialize() {
-	player = GraphicsDevice.CreateSpriteFromFile(_T("プロト.png"));
+	player = GraphicsDevice.CreateSpriteFromFile(_T("プレイヤーキャラ_20.png"));
 	player_swing = GraphicsDevice.CreateSpriteFromFile(_T("player2.png"));
 	map = GraphicsDevice.CreateSpriteFromFile(_T("map.png"));
 	perfect = GraphicsDevice.CreateSpriteFromFile(_T("perfect.png"));
@@ -121,7 +122,10 @@ void GameMain::iwai_Initialize() {
 	good_se = SoundDevice.CreateSoundFromFile(_T("good.wav"));
 	perfect_se = SoundDevice.CreateSoundFromFile(_T("perfect.wav"));
 	miss_se = SoundDevice.CreateSoundFromFile(_T("空振り.wav"));
-	player_x = 100;
+	ready = GraphicsDevice.CreateSpriteFromFile(_T("ready.png"));
+	go = GraphicsDevice.CreateSpriteFromFile(_T("go.png"));
+	txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 50);
+	player_x = 150;
 	player_y = 350;
 	swing_flg = 0;
 	Tv_x = 1200;
@@ -132,15 +136,23 @@ void GameMain::iwai_Initialize() {
 	perfect_y = 400;
 	good_x = 300;
 	good_y = 400;
+	miss_x = 300;
+	miss_y = 400;
 	GameMain::score = 0;
 	swing_flg = false;
 	Tv_alpha = 1;
 	hard_speed = 1;
+	big_go = 1;
+	alpha_go = 1;
+	combo = 0;
 	for (int i = 0; i < 物の数; i++)
 	{
 		hitcount[i] = false;
-		big[i] = 1;
+		big[i] = 1.1;
 		circle_alpha[i] = 0;
+		テレビ_aplha[i] = 1;
+		カメラ_aplha[i] = 1;
+		電子レンジ_aplha[i] = 1;
 	}
 }
 void GameMain::iwai_Draw() {
@@ -159,7 +171,7 @@ void GameMain::iwai_Draw() {
 	{
 		SpriteBatch.Draw(*circle, Vector3(200, 300, -10), circle_alpha[i], Vector3(0, 0, 1), Vector3(200, 200, 0), Vector2(big[i], big[i]));
 	}
-	SpriteBatch.Draw(*player, Vector3(player_x, player_y, 0), RectWH(clip_x, 0, 300, 300));
+	SpriteBatch.Draw(*player, Vector3(player_x, player_y, 0), RectWH(clip_x, 0, 350, 300));
 	if (hit_test == 1)SpriteBatch.Draw(*perfect, Vector3(300, 400, 0));
 	if (hit_test == 2)SpriteBatch.Draw(*good, Vector3(280, 400, 0));
 	if (hit_test == 3)SpriteBatch.Draw(*miss, Vector3(280, 400, 0));
@@ -167,8 +179,13 @@ void GameMain::iwai_Draw() {
 	SpriteBatch.DrawString(DefaultFont, Vector2(350, 20), Color(0, 0, 0), _T("タイム:%d"), 一秒);
 	SpriteBatch.DrawString(DefaultFont, Vector2(350, 40), Color(0, 0, 0), _T("スコア:%d"), score);
 	SpriteBatch.DrawString(DefaultFont, Vector2(350, 60), Color(0, 0, 0), _T("破壊:%f"), explosion->GetTrackPosition(0));
+	if(combo >= 2)SpriteBatch.DrawString(txt, Vector2(0, 40), Color(255, 162,235), _T("%dコンボ"), combo);
+	if(count >1430)SpriteBatch.Draw(*ready, Vector3(400, 160, 0));
+	if(count <=1430 && count >= 1320)SpriteBatch.Draw(*go, Vector3(430,160, 0),alpha_go, Vector3(0, 0,0), Vector3(122, 112, 0), Vector2(big_go, big_go));
 }
 void GameMain::iwai_Update() {
+
+	count--;
 
 	if (titleScene::hard == 2)
 	{
@@ -177,64 +194,91 @@ void GameMain::iwai_Update() {
 			circle_alpha[i] = 0;
 		}
 	}
-	good_collision = Rect(good_x, good_y, good_x + 250.0f, good_y + 200.0f);
+	good_collision = Rect(good_x, good_y, good_x + 200.0f, good_y + 200.0f);
 	perfect_collision = Rect(perfect_x + 70, perfect_y, perfect_x + 170.0f, perfect_y + 200.0f);
-	Tv_collision = Rect(Tv_x + 20, Tv_y + 0, Tv_x + 100.0f, Tv_y + 100.0f);
-		if (keyboard.IsKeyDown(Keys_Space) && swing_flg == false)
+	miss_collision = Rect(miss_x , miss_y + 0, miss_x + 300.0f, Tv_y + 200.0f);
+		if (key_buf.IsPressed(Keys_Space) && swing_flg == false)
 		{
 			for (int i = 0; i < 物の数; i++)
 			{
 				swing_flg = true;
 				if (perfect_collision.Intersect(テレビ_collision[i]) && hitcount[i] == false|| perfect_collision.Intersect(カメラ_collision[i]) && hitcount[i] == false|| perfect_collision.Intersect(電子レンジ_collision[i]) && hitcount[i] == false)
 				{
+					combo++;
 					hit_test = 1;
-					score += 300;
+					score += 250 + combo*50 ;
 					hitcount[i] = true;
 					perfect_se->Play();
 					explosion->SetTrackPosition(0, 0);
 					explosion->SetTrackEnable(0, true);
+					テレビ_aplha[i] = 0;
+					カメラ_aplha[i] = 0;
+					電子レンジ_aplha[i] = 0;
 				}
 				else if (good_collision.Intersect(テレビ_collision[i]) && hitcount[i] == false || good_collision.Intersect(カメラ_collision[i]) && hitcount[i] == false || good_collision.Intersect(電子レンジ_collision[i]) && hitcount[i] == false)
 				{
+					combo++;
 					hit_test = 2;
-					score += 100;
+					score += 500 + combo * 50;
 					hitcount[i] = true;
 					good_se->Play();
 					explosion->SetTrackEnable(0, true);
+					テレビ_aplha[i] = 0;
+					カメラ_aplha[i] = 0;
+					電子レンジ_aplha[i] = 0;
+					
 				}
-				else if (range > 250 && range < 700)
+				else if (miss_collision.Intersect(テレビ_collision[i]) && hitcount[i] == false || miss_collision.Intersect(カメラ_collision[i]) && hitcount[i] == false || miss_collision.Intersect(電子レンジ_collision[i]) && hitcount[i] == false)
 				{
-					miss_se->Play();
-				}
-				else
-				{
-					miss_se->Play();
+					if (titleScene::hard == 2)
+					{
+					}
+					else
+					{
+						hit_test = 3;
+						miss_se->Play();
+						combo = 0;
+						hitcount[i] = true;
+						テレビ_aplha[i] = 0;
+						カメラ_aplha[i] = 0;
+						電子レンジ_aplha[i] = 0;
+					}
 				}
 			}
 		}
 
-	if (keyboard.IsKeyUp(Keys_Space) && swing_flg == true)
+	//if (keyboard.IsKeyUp(Keys_Space) && swing_flg == true)
+	//{
+	//	clip_x = 0;
+	//	hit_test = 0;
+	//	swing_flg = false;
+	//}
+	range = Tv_x - player_x;
+	if (swing_flg == true)
+	{
+		clip_x += 350;
+	}
+	if (clip_x >= 6650)
 	{
 		clip_x = 0;
 		hit_test = 0;
 		swing_flg = false;
 	}
-	range = Tv_x - player_x;
-	if (swing_flg == true)
-	{
-		clip_x += 300;
-		if (clip_x >= 2100)
-		{
-			clip_x = 2100;
-		}
-	}
-
 	for (int i = 0; i < 物の数; i++)
 	{
 		if (big[i] <= 0)
 		{
 			big[i] = 0;
 		}
+	}
+	if (count <=1430)
+	{
+		big_go += 0.025;
+		alpha_go -= 0.01;
+	}
+	if (alpha_go <= 0)
+	{
+		alpha_go = 0;
 	}
 }
 void GameMain::髙橋Initialize() {
@@ -534,10 +578,10 @@ void GameMain::髙橋Draw()
 		{
 
 			if (物_state[i] == 1) {
-				SpriteBatch.Draw(*テレビ, Vector3(テレビ_x[i], テレビ_y[i], 0.0f));
+				SpriteBatch.Draw(*テレビ, Vector3(テレビ_x[i], テレビ_y[i], 0.0f),テレビ_aplha[i]);
 			}
 			else if (物_state[i] == 2) {
-				SpriteBatch.Draw(*カメラ, Vector3(カメラ_x[i], カメラ_y[i], 0.0f));
+				SpriteBatch.Draw(*カメラ, Vector3(カメラ_x[i], カメラ_y[i], 0.0f), カメラ_aplha[i]);
 			}
 			else if (物_state[i] == 3) {
 				SpriteBatch.Draw(*電子レンジ, Vector3(電子レンジ_x[i], 電子レンジ_y[i], 0.0f));
@@ -565,8 +609,8 @@ void GameMain::３ｄ_Initialize()
 	GraphicsDevice.SetLight(light);
 
 	explosion = GraphicsDevice.CreateAnimationModelFromFile(_T("bakuha.x"), Compute_NormalTangent);
-	explosion->SetScale(50.0f, -50.0f, 1.0f);//大きさ
-	explosion->SetPosition(640, 360, -10000);
+	explosion->SetScale(30.0f, -30.0f, 1.0f);//大きさ
+	explosion->SetPosition(400, 500, -10000);
 
 	Material material;
 	material.Diffuse = Color(1.0f, 1.0f, 1.0f);

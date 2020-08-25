@@ -59,6 +59,11 @@ private:
 	SPRITE memo;
 	SOUND perfect_se;
 	SPRITE bat;
+	SPRITE nomal;
+	SPRITE hard_sp;
+	SPRITE title_title;
+	SPRITE ‘€ìà–¾;
+	SPRITE ‘€ìà–¾Q•¶š;
 	float bat_x, bat_y;
 	float txt_x, txt_y;
 	float txt_x2, txt_y2;
@@ -67,6 +72,7 @@ private:
 	int flg;
 	int scene;
 	int hit;
+	int se_flg;
 	FONT txt;
 	FONT smalltxt;
 

@@ -74,6 +74,8 @@ private:
 	SPRITE Tv;
 	SPRITE circle;
 	SPRITE hit_point;
+	SPRITE ready;
+	SPRITE go;
 	SOUND good_se;
 	SOUND perfect_se;
 	SOUND miss_se;
@@ -93,11 +95,21 @@ private:
 	float circle_alpha[物の数];
 	float hard_speed;
 	float big_３ｄ;
+	float big_go;
+	float alpha_go;
+	float miss_x, miss_y;
+	float カメラ_aplha[物の数];
+	float テレビ_aplha[物の数];
+	float 電子レンジ_aplha[物の数];
+	int フォント_state;
+	int combo;
+	FONT txt;
 	Rect  player_collision;
 	Rect  perfect_collision;
 	Rect  Tv_collision;
 	Rect  good_collision;
 	Rect  good2_collision;
+	Rect  miss_collision;
 	ANIMATIONMODEL explosion;
 	CAMERA camera;
 	MEDIA ムービー;
@@ -145,6 +157,13 @@ private:
 	float ガス缶速度;
 	float ガス缶_x[物の数], ガス缶_y[物の数];
 	Rect ガス缶_collision[物の数];
+
+	SPRITE 巨大テレビ;
+	int 巨大テレビ連打数;
+	int 巨大テレビ_state;
+	Rect 巨大テレビ_collision;
+	float 巨大テレビ_x, 巨大テレビ_y;
+	float 巨大テレビ速度;
 
 	Rect 当たり判定_collision;
 	Rect テレビ_collision[物の数];

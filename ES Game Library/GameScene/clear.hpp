@@ -55,8 +55,19 @@ private:
 private:
 	// 変数宣言
 	SPRITE clear_;
+	SPRITE a;
+	SPRITE b;
+	SPRITE c;
+	float a_roll;
+	float a_big;
+	float b_big;
+	float c_roll;
+	int count;
 	FONT txt;
 	FONT bigtxt;
+	SOUND big_se;
+	SOUND small_se;
+	SOUND tin_se;
 
 	// 関数プロトタイプ
 
