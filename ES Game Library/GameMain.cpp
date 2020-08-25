@@ -325,7 +325,7 @@ void GameMain::ûü‹´Initialize() {
 	•¨_state[0] = 1;
 
 	for (int i = 1; i < •¨‚Ì”; i++) {
-		•¨_state[i] = MathHelper_Random(1, 3);
+		•¨_state[i] = 3;  //MathHelper_Random(1, 3);
 	}
 
 	ƒvƒŒƒCƒ„[_x = 100;
