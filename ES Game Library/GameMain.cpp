@@ -193,7 +193,7 @@ void GameMain::iwai_Update() {
 	}
 	good_collision = Rect(good_x, good_y, good_x + 200.0f, good_y + 200.0f);
 	perfect_collision = Rect(perfect_x + 70, perfect_y, perfect_x + 170.0f, perfect_y + 200.0f);
-	miss_collision = Rect(miss_x , miss_y + 0, miss_x + 300.0f, Tv_y + 200.0f);
+ 	miss_collision = Rect(miss_x , miss_y + 0, miss_x + 300.0f, Tv_y + 200.0f);
 		if (key_buf.IsPressed(Keys_Space) && swing_flg == false)
 		{
 			for (int i = 0; i < 物の数; i++)
@@ -205,6 +205,7 @@ void GameMain::iwai_Update() {
 					hit_test = 1;
 					score += 250 + combo*50 ;
 					hitcount[i] = true;
+					circle_alpha[i] = 0;
 					perfect_se->Play();
 					explosion->SetTrackPosition(0, 0);
 					explosion->SetTrackEnable(0, true);
@@ -235,7 +236,7 @@ void GameMain::iwai_Update() {
 						hit_test = 3;
 						miss_se->Play();
 						combo = 0;
-						hitcount[i] = true;
+						hitcount[i] = false;
 						テレビ_aplha[i] = 0;
 						カメラ_aplha[i] = 0;
 						電子レンジ_aplha[i] = 0;
@@ -266,6 +267,21 @@ void GameMain::iwai_Update() {
 		if (big[i] <= 0)
 		{
 			big[i] = 0;
+		}
+		if (hitcount[i] == false && テレビ_x[i]> 0 && テレビ_x[i] < 100)
+		{
+			combo = 0;
+			hitcount[i] = true;
+		}
+		if (hitcount[i] == false && 電子レンジ_x[i] > 0 && 電子レンジ_x[i] < 100)
+		{
+			combo = 0;
+			hitcount[i] = true;
+		}
+		if (hitcount[i] == false && カメラ_x[i] > 0 && カメラ_x[i] < 100)
+		{
+			combo = 0;
+			hitcount[i] = true;
 		}
 	}
 	if (count <=1430)
@@ -298,7 +314,7 @@ void GameMain::髙橋Initialize() {
 
 	カメラ速度 = 15 ;
 	電子レンジ速度 = 6 / titleScene::hard;
-	テレビ速度 = 10 * titleScene::hard;
+	テレビ速度 = 20 * titleScene::hard;
 	巨大テレビ速度 = 5 * titleScene::hard;
 	秒 = 0;
 	一秒 = 0;
@@ -307,9 +323,9 @@ void GameMain::髙橋Initialize() {
 	デバック = 0;
 	巨大テレビ連打数 = 15 * titleScene::hard;
 	巨大テレビ_state = 0;
-
+	フォント_state = 0;
 	for (int i = 0; i < 物の数; i++) {
-		ゴール[i] = 100 + (150 * i);
+		ゴール[i] = 100 + (150/titleScene::hard * i);
 		テレビ_x[i] = 0;
 		テレビ_y[i] = 400;
 		カメラ_x[i] = 0;
@@ -325,7 +341,7 @@ void GameMain::髙橋Initialize() {
 	物_state[0] = 1;
 
 	for (int i = 1; i < 物の数; i++) {
-		物_state[i] = 3;  //MathHelper_Random(1, 3);
+		物_state[i] = MathHelper_Random(1, 3);
 	}
 
 	プレイヤー_x = 100;
@@ -400,7 +416,7 @@ void GameMain::髙橋Main() {
 				テレビ_collision[i] = Rect(テレビ_x[i], テレビ_y[i], テレビ_x[i] + 100, テレビ_y[i] + 250);
 				if (テレビ_x[i] < 1280)
 				{
-					big[i] -= 0.0138;
+					big[i] -= 0.0276;
 					circle_alpha[i] = 0.5;
 				}
 			}
@@ -412,9 +428,9 @@ void GameMain::髙橋Main() {
 					Vector3 bezier = Vector3_Bezier(ポイント[0], ポイント[1], ポイント[2], ポイント[3], t[i]);
 					カメラ_x[i] = bezier.x;
 					カメラ_y[i] = bezier.y;
-					t[i] = t[i] + 0.02f * titleScene::hard;
+					t[i] = t[i] + 0.04f * titleScene::hard;
 					カメラ_collision[i] = Rect(bezier.x, bezier.y, bezier.x + 60, bezier.y + 64);
-					big[i] -= 0.013;
+					big[i] -= 0.026;
 					circle_alpha[i] = 0.5;
 				}
 			}
@@ -423,7 +439,7 @@ void GameMain::髙橋Main() {
 				電子レンジ_collision[i] = Rect(電子レンジ_x[i] - 3, 電子レンジ_y[i], 電子レンジ_x[i] + 100, 電子レンジ_y[i] + 150);
 
 				if (電子レンジ_x[i] < 1280) {
-						big[i] -= 0.0085;
+						big[i] -= 0.0092;
 						circle_alpha[i] = 0.5;
 					電子レンジ_x[i] = 電子レンジ_x[i] - 2;
 					////                                             動かしたいドット数↓　　↓最初の描画位置　 
@@ -504,6 +520,7 @@ void GameMain::髙橋Main() {
 
 			if (巨大テレビ連打数 <= 0) {
 				巨大テレビ_state = 1;
+				score += 1000;
 			}
 
 			if (巨大テレビ_x < 100) {

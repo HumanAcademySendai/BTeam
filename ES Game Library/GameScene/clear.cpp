@@ -93,9 +93,9 @@ void clearScene::Draw()
 	SpriteBatch.Begin();
 	SpriteBatch.Draw(*clear_, Vector3(0, 0, 0));
 	SpriteBatch.DrawString(txt, Vector2(350, 40), Color(255, 255, 255), _T("ƒXƒRƒA:%d"), GameMain::score);
-	if (GameMain::score >= 0 && GameMain::score < 300)SpriteBatch.Draw(*c, Vector3(700, 230, 0), 1.0f, Vector3(0, 0, c_roll), Vector3(110, 112, 0), Vector2(1, 1));
-	if (GameMain::score >= 300 && GameMain::score < 1000)SpriteBatch.Draw(*b, Vector3(700, 230, 0), 1.0f, Vector3(0, 0, 0), Vector3(114, 112, 0), Vector2(b_big, b_big));
-	if (GameMain::score >= 1000)SpriteBatch.Draw(*a, Vector3(700,230,0), 1.0f, Vector3(0, 0, a_roll), Vector3(110, 110, 0), Vector2(a_big, a_big));
+	if (GameMain::score >= 0 && GameMain::score < 3950)SpriteBatch.Draw(*c, Vector3(700, 230, 0), 1.0f, Vector3(0, 0, c_roll), Vector3(110, 112, 0), Vector2(1, 1));
+	if (GameMain::score >= 3950 && GameMain::score < 17950)SpriteBatch.Draw(*b, Vector3(700, 230, 0), 1.0f, Vector3(0, 0, 0), Vector3(114, 112, 0), Vector2(b_big, b_big));
+	if (GameMain::score >= 17950)SpriteBatch.Draw(*a, Vector3(700,230,0), 1.0f, Vector3(0, 0, a_roll), Vector3(110, 110, 0), Vector2(a_big, a_big));
 	SpriteBatch.DrawString(bigtxt, _T("•]‰¿:"), Vector2(350, 300), Color(255, 0, 0));
 	SpriteBatch.End();
 
