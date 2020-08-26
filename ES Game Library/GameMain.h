@@ -103,7 +103,9 @@ private:
 	float 電子レンジ_aplha[物の数];
 	int フォント_state;
 	int combo;
+	float font_x;
 	FONT txt;
+	FONT small_txt;
 	Rect  player_collision;
 	Rect  perfect_collision;
 	Rect  Tv_collision;

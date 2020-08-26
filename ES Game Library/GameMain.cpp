@@ -15,13 +15,13 @@ bool GameMain::Initialize()
 	DefaultFont = GraphicsDevice.CreateDefaultFont();
 
 	GraphicsDevice.SetRenderState(NormalizeNormals_Enable);
-	//GraphicsDevice.SetRenderState(Specular_Enable);
+	GraphicsDevice.SetRenderState(Specular_Enable);
 	//GraphicsDevice.SetRenderState(CullMode_None);
 
 	髙橋Initialize();
 	iwai_Initialize();
 	３ｄ_Initialize();
-
+	//hard 58
 	return true;
 }
 
@@ -103,7 +103,7 @@ void GameMain::Draw()
 	GraphicsDevice.UnlockCanvas();
 }
 void GameMain::iwai_Initialize() {
-	player = GraphicsDevice.CreateSpriteFromFile(_T("プレイヤーキャラ_20.png"));
+	player = GraphicsDevice.CreateSpriteFromFile(_T("プレイヤーキャラ２.png"));
 	player_swing = GraphicsDevice.CreateSpriteFromFile(_T("player2.png"));
 	map = GraphicsDevice.CreateSpriteFromFile(_T("map.png"));
 	perfect = GraphicsDevice.CreateSpriteFromFile(_T("perfect.png"));
@@ -120,7 +120,8 @@ void GameMain::iwai_Initialize() {
 	miss_se = SoundDevice.CreateSoundFromFile(_T("空振り.wav"));
 	ready = GraphicsDevice.CreateSpriteFromFile(_T("ready.png"));
 	go = GraphicsDevice.CreateSpriteFromFile(_T("go.png"));
-	txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 50);
+	txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 100);
+	small_txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 50);
 	player_x = 150;
 	player_y = 350;
 	swing_flg = 0;
@@ -142,6 +143,7 @@ void GameMain::iwai_Initialize() {
 	big_go = 1;
 	alpha_go = 1;
 	combo = 0;
+	font_x = 100;
 	for (int i = 0; i < 物の数; i++)
 	{
 		hitcount[i] = false;
@@ -169,14 +171,18 @@ void GameMain::iwai_Draw() {
 		SpriteBatch.Draw(*circle, Vector3(200, 300, -10), circle_alpha[i], Vector3(0, 0, 1), Vector3(200, 200, 0), Vector2(big[i], big[i]));
 	}
 	SpriteBatch.Draw(*player, Vector3(player_x, player_y, 0), RectWH(clip_x, 0, 350, 300));
-	if (hit_test == 1)SpriteBatch.Draw(*perfect, Vector3(300, 400, 0));
-	if (hit_test == 2)SpriteBatch.Draw(*good, Vector3(280, 400, 0));
-	if (hit_test == 3)SpriteBatch.Draw(*miss, Vector3(280, 400, 0));
-	SpriteBatch.DrawString(DefaultFont, Vector2(350, 0), Color(0, 0, 0), _T("距離:%f"), range);
-	SpriteBatch.DrawString(DefaultFont, Vector2(350, 20), Color(0, 0, 0), _T("タイム:%d"), count);
-	SpriteBatch.DrawString(DefaultFont, Vector2(350, 40), Color(0, 0, 0), _T("スコア:%d"), score);
-	SpriteBatch.DrawString(DefaultFont, Vector2(350, 60), Color(0, 0, 0), _T("破壊:%f"), explosion->GetTrackPosition(0));
-	if(combo >= 2)SpriteBatch.DrawString(txt, Vector2(0, 40), Color(255, 162,235), _T("%dコンボ"), combo);
+	if (hit_test == 1)SpriteBatch.Draw(*perfect, Vector3(300, 350, 0));
+	if (hit_test == 2)SpriteBatch.Draw(*good, Vector3(280, 350, 0));
+	if (hit_test == 3)SpriteBatch.Draw(*miss, Vector3(280, 350, 0));
+	//SpriteBatch.DrawString(DefaultFont, Vector2(350, 0), Color(0, 0, 0), _T("距離:%f"), range);
+	//SpriteBatch.DrawString(DefaultFont, Vector2(350, 20), Color(0, 0, 0), _T("タイム:%d"), count);
+	//SpriteBatch.DrawString(DefaultFont, Vector2(350, 40), Color(0, 0, 0), _T("スコア:%d"), score);
+	//SpriteBatch.DrawString(DefaultFont, Vector2(350, 60), Color(0, 0, 0), _T("破壊:%f"), explosion->GetTrackPosition(0));
+	if (combo >= 2)
+	{
+		SpriteBatch.DrawString(txt, Vector2(font_x, 120), Color(255, 255, 255), _T("%d"), combo);
+		SpriteBatch.DrawString(small_txt, Vector2(260, 150), Color(255, 255, 255), _T("combo"));
+	}
 	if(count >1430)SpriteBatch.Draw(*ready, Vector3(400, 160, 0));
 	if(count <=1430 && count >= 1320)SpriteBatch.Draw(*go, Vector3(430,160, 0),alpha_go, Vector3(0, 0,0), Vector3(122, 112, 0), Vector2(big_go, big_go));
 }
@@ -219,6 +225,7 @@ void GameMain::iwai_Update() {
 					hit_test = 2;
 					score += 500 + combo * 50;
 					hitcount[i] = true;
+					circle_alpha[i] = 0;
 					good_se->Play();
 					explosion->SetTrackEnable(0, true);
 					テレビ_aplha[i] = 0;
@@ -237,9 +244,10 @@ void GameMain::iwai_Update() {
 						miss_se->Play();
 						combo = 0;
 						hitcount[i] = false;
+						circle_alpha[i] = 0;
 						テレビ_aplha[i] = 0;
 						カメラ_aplha[i] = 0;
-						電子レンジ_aplha[i] = 0;
+						電子レンジ_aplha[i] = 0;\
 					}
 				}
 			}
@@ -293,6 +301,10 @@ void GameMain::iwai_Update() {
 	{
 		alpha_go = 0;
 	}
+	if (combo >= 10)
+	{
+		font_x = 20;
+	}
 }
 void GameMain::髙橋Initialize() {
 
@@ -313,9 +325,9 @@ void GameMain::髙橋Initialize() {
 	ムービー = MediaManager.CreateMediaFromFile(_T("ロボット工場.mp3"));
 
 	カメラ速度 = 15 ;
-	電子レンジ速度 = 6 / titleScene::hard;
-	テレビ速度 = 20 * titleScene::hard;
-	巨大テレビ速度 = 5 * titleScene::hard;
+	電子レンジ速度 = 6 ;
+	テレビ速度 = 20 ;
+	巨大テレビ速度 = 5 ;
 	秒 = 0;
 	一秒 = 0;
 	開始_state = 0;
@@ -428,9 +440,9 @@ void GameMain::髙橋Main() {
 					Vector3 bezier = Vector3_Bezier(ポイント[0], ポイント[1], ポイント[2], ポイント[3], t[i]);
 					カメラ_x[i] = bezier.x;
 					カメラ_y[i] = bezier.y;
-					t[i] = t[i] + 0.04f * titleScene::hard;
+					t[i] = t[i] + 0.02f * titleScene::hard;
 					カメラ_collision[i] = Rect(bezier.x, bezier.y, bezier.x + 60, bezier.y + 64);
-					big[i] -= 0.026;
+					big[i] -= 0.015;
 					circle_alpha[i] = 0.5;
 				}
 			}
@@ -506,7 +518,6 @@ void GameMain::髙橋Main() {
 		巨大テレビ_x = 巨大テレビ_x - 巨大テレビ速度;
 
 		if (巨大テレビ_state == 0) {
-
 			if (key_buf.IsPressed(Keys_Space)) {
 
 				if (perfect_collision.Intersect(巨大テレビ_collision)) {
@@ -541,18 +552,18 @@ void GameMain::髙橋Draw()
 
 
 	SpriteBatch.Begin();*/
-	SpriteBatch.DrawString(フォント, Vector2(0, 0), Color(255, 255, 255), _T("%ld"), ムービー->GetPosition() / 100000);
-	SpriteBatch.DrawString(フォント, Vector2(500, 0), Color(255, 255, 255), _T("%d"), 一秒);
+	//SpriteBatch.DrawString(フォント, Vector2(0, 0), Color(255, 255, 255), _T("%ld"), ムービー->GetPosition() / 100000);
+	//SpriteBatch.DrawString(フォント, Vector2(500, 0), Color(255, 255, 255), _T("%d"), 一秒);
 
 	if (開始_state == 3) {
-		SpriteBatch.DrawString(フォント, Vector2(1000, 0), Color(255, 255, 255), _T("クリア"));
+		/*SpriteBatch.DrawString(フォント, Vector2(1000, 0), Color(255, 255, 255), _T("クリア"));*/
 	}
 	SpriteBatch.Draw(*背景, Vector3(0.0f, 0.0f, 10.0f));
 	//	SpriteBatch.Draw(*プレイヤー, Vector3(プレイヤー_x, プレイヤー_y, 0.0f));
 	//SpriteBatch.Draw(*当たり判定, Vector3(当たり判定_x, 当たり判定_y, 0.0f));
 
 	if (デバック == 1) {
-		SpriteBatch.DrawString(フォント, Vector2(1000, 50), Color(255, 255, 255), _T("当たってる"));
+		/*SpriteBatch.DrawString(フォント, Vector2(1000, 50), Color(255, 255, 255), _T("当たってる"));*/
 	}
 
 	if (開始_state == 1 || 開始_state == 2) {
@@ -582,22 +593,24 @@ void GameMain::３ｄ_Initialize()
 {
 	Light light;
 	light.Type = Light_Directional;
-	light.Direction = Vector3(0, -1, 1);
+	light.Direction = Vector3(1, 1, 1);
 	light.Diffuse = Color(1.0f, 1.0f, 1.0f);
 	light.Ambient = Color(1.0f, 1.0f, 1.0f);
 	light.Specular = Color(1.0f, 1.0f, 1.0f);
 	GraphicsDevice.SetLight(light);
 
 	explosion = GraphicsDevice.CreateAnimationModelFromFile(_T("bakuha.x"), Compute_NormalTangent);
-	explosion->SetScale(30.0f, -30.0f, 1.0f);//大きさ
+	explosion->SetScale(120.0f, -120.0f, 1.0f);//大きさ
 	explosion->SetPosition(400, 500, -10000);
 
 	Material material;
-	material.Diffuse = Color(1.0f, 1.0f, 1.0f);
+	material.Diffuse = Color(0.75f, 0.75f, 0.75f);
 	material.Ambient = Color(0.5f, 0.5f, 0.5f);
 	material.Specular = Color(1.0f, 1.0f, 1.0f);
 	material.Power = 10.0f;
 	explosion->SetMaterial(material);
+
+	explosion->ChangeTexture("", "tex.jpg");
 
 	explosion->SetTrackEnable(0, false);
 	explosion->SetTrackLoopMode(0, AnimationLoopMode_Once);
@@ -606,7 +619,7 @@ void GameMain::３ｄ_Initialize()
 
 	camera->SetView(Vector3(0, 0, -10), Vector3(0, 0, 0));
 	camera->SetOrthographicOffCenter(0, 1280, 720, 0, -10000, 10000);
-	//explosion->SetPosition(0, 0, 0);
+	//explosion->SetPosition(0, 0, -9.0);
 	//camera->SetPerspectiveFieldOfView(45.0f, 16.0f / 9.0f, 0.1f, 10000.0f);
 	GraphicsDevice.SetCamera(camera);
 }

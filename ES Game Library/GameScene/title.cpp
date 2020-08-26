@@ -18,7 +18,10 @@ bool titleScene::Initialize()
 	nomal = GraphicsDevice.CreateSpriteFromFile(_T("ГmБ[Г}ГЛГ^ГCГgГЛЙжЦ .png"));
 	hard_sp = GraphicsDevice.CreateSpriteFromFile(_T("ГnБ[ГhГ^ГCГgГЛЙжЦ .png"));
 	title_title = GraphicsDevice.CreateSpriteFromFile(_T("Г^ГCГgГЛГ^ГCГgГЛЙжЦ .png"));
+	enter_to = GraphicsDevice.CreateSpriteFromFile(_T("enter_.png"));
+	space_to = GraphicsDevice.CreateSpriteFromFile(_T("space_to.png"));
 	perfect_se = SoundDevice.CreateSoundFromFile(_T("perfect.wav"));
+	start = GraphicsDevice.CreateSpriteFromFile(_T("gamestart_space.png"));
 	txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 75);
 	smalltxt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 35);
 	count = 0;
@@ -35,6 +38,17 @@ bool titleScene::Initialize()
 	roll2 = 0;
 	bat_roll = 0;
 	se_flg = false;
+	КgСе_x = 1;
+	КgСе_y = 1;
+	КgСе_x2 = 1;
+	КgСе_y2 = 1;
+	КgСе_x3 = 1;
+	КgСе_y3 = 1;
+	КgСе_x4 = 1;
+	КgСе_y4 = 1;
+	КgСе_x5 = 1;
+	КgСе_y5 = 1;
+	aplha = 1;
 	font = GraphicsDevice.CreateRenderTarget(1024, 256, PixelFormat_RGBA8888, DepthFormat_Unknown);
 	font2 = GraphicsDevice.CreateRenderTarget(1024, 256, PixelFormat_RGBA8888, DepthFormat_Unknown);
 
@@ -87,11 +101,32 @@ int titleScene::Update()
 			}
 			if (flg == true)
 			{
+				aplha = 0;
 				count++;
 				txt_x += 20;
-				txt_y -= 5;
+				txt_y -= 3;
 				bat_roll = 90;
-				roll += 1;
+				roll += 0.5;
+				КgСе_x += 0.1;
+				КgСе_y += 0.1;
+				КgСе_x2 -= 0.01;
+				КgСе_y2 -= 0.01;
+				КgСе_x3 -= 0.01;
+				КgСе_y3 -= 0.01;
+				КgСе_x4 -= 0.01;
+				КgСе_y4 -= 0.01;
+				КgСе_x5 -= 0.01;
+				КgСе_y5 -= 0.01;
+			}
+			if (count >= 70) {
+				КgСе_x2 = 0;
+				КgСе_y2 = 0;
+				КgСе_x3 = 0;
+				КgСе_y3 = 0;
+				КgСе_x4 = 0;
+				КgСе_y4 = 0;
+				КgСе_x5 = 1;
+				КgСе_y5 = 0;
 			}
 			if (count >= 80)
 			{
@@ -112,11 +147,32 @@ int titleScene::Update()
 			}
 			if (flg == true)
 			{
+				aplha = 0;
 				count++;
-				txt_x2 += 20;
+				txt_x2 += 15;
 				txt_y2 -= 5;
 				bat_roll = 90;
 				roll2 += 1;
+				КgСе_x2 += 0.1;
+				КgСе_y2 += 0.1;
+				КgСе_x -= 0.01;
+				КgСе_y -= 0.01;
+				КgСе_x3 -= 0.01;
+				КgСе_y3 -= 0.01;
+				КgСе_x4 -= 0.01;
+				КgСе_y4 -= 0.01;
+				КgСе_x5 -= 0.01;
+				КgСе_y5 -= 0.01;
+			}
+			if (count >= 70) {
+				КgСе_x = 0;
+				КgСе_y = 0;
+				КgСе_x3 = 0;
+				КgСе_y3 = 0;
+				КgСе_x4 = 0;
+				КgСе_y4 = 0;
+				КgСе_x5 = 0;
+				КgСе_y5 = 0;
 			}
 			if (count >= 80)
 			{
@@ -174,19 +230,21 @@ void titleScene::Draw()
 	{
 		SpriteBatch.Draw(*САНмРаЦЊ, Vector3(0, 0, 0));
 		SpriteBatch.Draw(*САНмРаЦЊБQХґОЪ, Vector3(0, 0, 0));
+		SpriteBatch.Draw(*space_to, Vector3(900, 600, -10));
 	}
 	if (scene == 0)
 	{
 		SpriteBatch.Draw(*title, Vector3(0, 0, 0));
-		SpriteBatch.Draw(*title_title, Vector3(0, 0, 0));
-		SpriteBatch.Draw(*bat, Vector3(bat_x, bat_y, -10), 1.0f, Vector3(0, 0, bat_roll), Vector3(70, 73, 0), Vector2(1, 1));
+		SpriteBatch.Draw(*bat, Vector3(bat_x, bat_y, -10), 1.0f, Vector3(0, 0, bat_roll), Vector3(70, 73, 0), Vector2(КgСе_x5, КgСе_y5));
+		SpriteBatch.Draw(*enter_to, Vector3(800, 600, -10),1.0f, Vector3(0, 0, 0), Vector3(500,0,0), Vector2(КgСе_x4, КgСе_y4));
 
-		SpriteBatch.Draw(*nomal, Vector3(txt_x, txt_y, 0), 1.0f, Vector3(0, 0, roll), Vector3(0, 0, 0), 1.0f);
-		SpriteBatch.Draw(*hard_sp, Vector3(txt_x2, txt_y2, 0), 1.0f, Vector3(0, 0, roll2), Vector3(0, 0, 0), 1.0f);
-
+		SpriteBatch.Draw(*title_title, Vector3(0, 0, 0), 1.0f, Vector3(0, 0, 0), Vector3(640, 300, 0), Vector2(КgСе_x3, КgСе_y3));
+		SpriteBatch.Draw(*nomal, Vector3(txt_x, txt_y, 0), 1.0f, Vector3(0, 0, roll), Vector3(634, 414, 0), Vector2(КgСе_x, КgСе_y));
+		SpriteBatch.Draw(*hard_sp, Vector3(txt_x2, txt_y2, 0), 1.0f, Vector3(0, 0, roll2), Vector3(700, 350, 0), Vector2(КgСе_x2, КgСе_y2));
+		//SpriteBatch.Draw(*start, Vector3(300, 600, 0));
 		//SpriteBatch.DrawString(txt, Vector2(txt_x, txt_y), Color(255, 255, 255), _T("ГmБ[Г}ГЛГВБ[Гh"));
 		//SpriteBatch.DrawString(txt, Vector2(txt_x2, txt_y2), Color(255, 255, 255), _T("ГnБ[ГhГВБ[Гh"));
-		//SpriteBatch.DrawString(smalltxt, Vector2(400, 550), Color(255, 255, 255), _T("ЦоИуГLБ[В≈СIСрБBГXГyБ[ГXГLБ[В≈МИТиБB"));
+        SpriteBatch.DrawString(smalltxt, Vector2(300, 630), Color(255, 255, 255), _T("ЦоИуГLБ[В≈СIСрБBГXГyБ[ГXГLБ[В≈МИТиБB"), aplha);
 	}
 
 	SpriteBatch.End();

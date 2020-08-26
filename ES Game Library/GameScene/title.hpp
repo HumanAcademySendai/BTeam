@@ -64,10 +64,15 @@ private:
 	SPRITE title_title;
 	SPRITE САНмРаЦЊ;
 	SPRITE САНмРаЦЊБQХґОЪ;
+	SPRITE enter_to;
+	SPRITE space_to;
+	SPRITE start;
+	float aplha;
 	float bat_x, bat_y;
 	float txt_x, txt_y;
 	float txt_x2, txt_y2;
 	float bat_roll,roll,roll2;
+	float КgСе_x, КgСе_y, КgСе_x2, КgСе_y2, КgСе_x3, КgСе_y3,КgСе_x4, КgСе_y4,КgСе_x5, КgСе_y5;;
 	int count;
 	int flg;
 	int scene;

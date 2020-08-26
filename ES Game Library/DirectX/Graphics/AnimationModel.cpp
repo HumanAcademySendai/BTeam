@@ -1529,8 +1529,8 @@ void CAnimationModel::ChangeTexture(D3DXFRAME* pFrame,
 	while(pMeshContainer != NULL) {
 		// ç≈â∫ëw
 		for(DWORD i = 0; i < pMeshContainer->NumMaterials; i++) {
-			if(pMeshContainer->pMaterials[i].pTextureFilename == NULL)
-				continue;
+			//if(pMeshContainer->pMaterials[i].pTextureFilename == NULL)
+			//	continue;
 
 			if(pMeshContainer->TextureName[i] != inMasterTexture)
 				continue;
