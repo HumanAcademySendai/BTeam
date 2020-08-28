@@ -159,11 +159,6 @@ private:
 	Vector3 ポイント[4];
 	float t[物の数];
 
-	SPRITE ガス缶;
-	float ガス缶速度;
-	float ガス缶_x[物の数], ガス缶_y[物の数];
-	Rect ガス缶_collision[物の数];
-
 	Rect 当たり判定_collision;
 	Rect テレビ_collision[物の数];
 	Rect カメラ_collision[物の数];
