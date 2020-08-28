@@ -86,7 +86,7 @@ private:
 	int swing_flg;
 	float life_y;
 	float clip_x;
-	//int count;
+	int count;
 	float good_x,good_y;
 	float perfect_x, perfect_y;
 	int hitcount[物の数];
@@ -152,25 +152,17 @@ private:
 	int デバック;
 	int 巨大テレビ連打数;
 	int 巨大テレビ_state;
-	//int テレビ動き;
-	//int テレビ動き_state[物の数];
+	int テレビ動き;
+	int テレビ動き_state[物の数];
 	float スピード_y[物の数];
 	float シータ[物の数];
 	Vector3 ポイント[4];
 	float t[物の数];
-	int フォント_state;
 
 	SPRITE ガス缶;
 	float ガス缶速度;
 	float ガス缶_x[物の数], ガス缶_y[物の数];
 	Rect ガス缶_collision[物の数];
-
-	SPRITE 巨大テレビ;
-	int 巨大テレビ連打数;
-	int 巨大テレビ_state;
-	Rect 巨大テレビ_collision;
-	float 巨大テレビ_x, 巨大テレビ_y;
-	float 巨大テレビ速度;
 
 	Rect 当たり判定_collision;
 	Rect テレビ_collision[物の数];
