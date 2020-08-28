@@ -98,12 +98,17 @@ private:
 	float big_go;
 	float alpha_go;
 	float miss_x, miss_y;
+	float explosion_big;
+	float explosion_x;
+	float explosion_y;
 	float カメラ_aplha[物の数];
 	float テレビ_aplha[物の数];
 	float 電子レンジ_aplha[物の数];
 	int フォント_state;
 	int combo;
 	float font_x;
+	float time_circle[物の数], flg_circle[物の数];
+	float big_save[物の数];
 	FONT txt;
 	FONT small_txt;
 	Rect  player_collision;
