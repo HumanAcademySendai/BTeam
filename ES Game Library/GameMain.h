@@ -79,6 +79,7 @@ private:
 	SOUND good_se;
 	SOUND perfect_se;
 	SOUND miss_se;
+	SPRITE combo_sprite;
 	float player_x, player_y;
 	float Tv_x, Tv_y;
 	int hit_test;

@@ -120,6 +120,7 @@ void GameMain::iwai_Initialize() {
 	perfect_se = SoundDevice.CreateSoundFromFile(_T("perfect.wav"));
 	miss_se = SoundDevice.CreateSoundFromFile(_T("‹óU‚è.wav"));
 	ready = GraphicsDevice.CreateSpriteFromFile(_T("ready.png"));
+	combo_sprite = GraphicsDevice.CreateSpriteFromFile(_T("combo.png"));
 	go = GraphicsDevice.CreateSpriteFromFile(_T("go.png"));
 	txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 100);
 	small_txt = GraphicsDevice.CreateSpriteFont(_T("ContinueAL"), 50);
@@ -183,7 +184,8 @@ void GameMain::iwai_Draw() {
 	if (combo >= 2)
 	{
 		SpriteBatch.DrawString(txt, Vector2(font_x, 120), Color(255, 255, 255), _T("%d"), combo);
-		SpriteBatch.DrawString(small_txt, Vector2(260, 150), Color(255, 255, 255), _T("combo"));
+		//SpriteBatch.DrawString(small_txt, Vector2(260, 150), Color(255, 255, 255), _T("combo"));
+		SpriteBatch.Draw(*combo_sprite, Vector3(260, 150, 0));
 	}
 	if(count >1430)SpriteBatch.Draw(*ready, Vector3(400, 160, 0));
 	if(count <=1430 && count >= 1320)SpriteBatch.Draw(*go, Vector3(430,160, 0),alpha_go, Vector3(0, 0,0), Vector3(122, 112, 0), Vector2(big_go, big_go));
